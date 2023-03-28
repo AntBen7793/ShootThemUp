@@ -13,10 +13,14 @@ Player init_player(){
     player.life = 100;
 
     /* sprites */
-    player.sprite = MLV_load_image("./img/state1_player.png");
-    player.sprite_right = MLV_load_image("./img/state1_right_player.png");
-    player.sprite_left = MLV_load_image("./img/state1_left_player.png");
-    player.sprite_forward = MLV_load_image("./img/state0_player.png");
+    player.sprite = MLV_load_image("./img/fatboat.png");
+    player.sprite_right = MLV_load_image("./img/fatboatright.png");
+    player.sprite_left = MLV_load_image("./img/fatboatleft.png");
+    player.sprite_forward = MLV_load_image("./img/fatboat.png");
+    MLV_resize_image(player.sprite, player.width, player.width);
+    MLV_resize_image(player.sprite_right, player.width, player.width);
+    MLV_resize_image(player.sprite_left, player.width, player.width);
+    MLV_resize_image(player.sprite_forward, player.width, player.width);
 
  return player;
 }
