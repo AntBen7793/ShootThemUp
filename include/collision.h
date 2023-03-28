@@ -1,0 +1,1 @@
+int check_collision(int x, int y, int width, int height, int x2, int y2, int width2, int height2);
