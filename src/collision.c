@@ -1,5 +1,8 @@
 #include "../include/const.h"
 #include <stdio.h>
+#include "../include/struct.h"
+#include "../include/missile.h"
+#include "../include/enemy.h"
 
 
 int check_collision(int x, int y, int width, int height, int x2, int y2, int width2, int height2){
@@ -7,8 +10,26 @@ int check_collision(int x, int y, int width, int height, int x2, int y2, int wid
    x + width > x2 &&
    y < y2 + height2 &&
    height + y > y2){
-        printf("ui\n");
         return 1;
     }
     return 0;
+}
+
+
+void check_collision_enemy_missile(Enemy** enemies, Missile** missiles, int* nb_missile, int* nb_enemy) {
+
+    for (int i = 0; i < *nb_missile; i++) {
+
+        if (check_missile_collision_border(&((*missiles)[i])) == 1) {
+            remove_missile(missiles, i, nb_missile);
+            break;
+        }  
+        for (int j = 0; j < *nb_enemy; j++) {
+            if (check_collision((*missiles)[i].x, (*missiles)[i].y, (*missiles)[i].width, (*missiles)[i].height, (*enemies)[j].x, (*enemies)[j].y, (*enemies)[j].width, (*enemies)[j].width) == 1) {
+                remove_missile(missiles, i, nb_missile);
+                remove_enemy(enemies, j, nb_enemy);
+                break;
+            }
+        }
+    }
 }

@@ -1,6 +1,9 @@
+#include "../include/struct.h"
+
 #include "../include/player.h"
 #include <MLV/MLV_all.h>
 #include "../include/const.h"
+
 
 Player init_player(){
     Player player;
@@ -13,15 +16,11 @@ Player init_player(){
     player.life = 100;
 
     /* sprites */
-    player.sprite = MLV_load_image("./img/fatboat.png");
-    player.sprite_right = MLV_load_image("./img/fatboatright.png");
-    player.sprite_left = MLV_load_image("./img/fatboatleft.png");
-    player.sprite_forward = MLV_load_image("./img/fatboat.png");
-    MLV_resize_image(player.sprite, player.width, player.width);
-    MLV_resize_image(player.sprite_right, player.width, player.width);
-    MLV_resize_image(player.sprite_left, player.width, player.width);
-    MLV_resize_image(player.sprite_forward, player.width, player.width);
-
+    player.sprite = MLV_load_image("./img/state1_player.png");
+    player.sprite_right = MLV_load_image("./img/state1_right_player.png");
+    player.sprite_left = MLV_load_image("./img/state1_left_player.png");
+    player.sprite_forward = MLV_load_image("./img/state0_player.png");
+     
  return player;
 }
 
@@ -34,8 +33,8 @@ void update_player(Player* player){
 }
 
 void draw_player(Player* player){
+   
     MLV_resize_image(player->sprite, player->width, player->width);
-
     if(player->dx > 0)
         MLV_draw_image(player->sprite_right, player->x, player->y);
     else if(player->dx < 0)
@@ -65,6 +64,8 @@ void check_keyboard(Player* player){
     } else {
         player->dy = 0;
     }
+
+
 
     
 }

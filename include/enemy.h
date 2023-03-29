@@ -1,10 +1,7 @@
 
-typedef struct {
-    int x;
-    int y;
-    int width;
-    int speed;
-} Enemy;
 
-Enemy init_enemy(int x);
-void update_enemy(Enemy* enemy);
+void init_enemy(Enemy** enemies, int* nb_enemy, int x, int y);
+void update_enemy(Enemy** enemies, int nb_enemy);
+void add_enemy(Enemy** enemies, Enemy enemy, int* nb_enemy);
+void remove_enemy(Enemy** enemies, int index, int* nb_enemy);
+void draw_enemy(Enemy* enemy);
