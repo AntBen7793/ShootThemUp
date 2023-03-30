@@ -10,7 +10,7 @@ void init_missile(Missile** missiles, int* nb_missile, int x, int y){
     missile.y = y;
     missile.width = 10;
     missile.height = 30;
-    missile.speed = 6;
+    missile.speed = 15;
     missile.life = 100;
     missile.sprite = MLV_load_image("./img/bullet.png");
     add_missile(missiles, missile, nb_missile);
@@ -35,10 +35,7 @@ void add_missile(Missile** missiles, Missile missile, int* nb_missile){
         return;
     }
     (*missiles)[*nb_missile] = missile;
-    *nb_missile = (*nb_missile) + 1;
-
-    
-    
+    *nb_missile = (*nb_missile) + 1;   
 }
 
 void remove_missile(Missile** missiles, int index, int* nb_missile) {

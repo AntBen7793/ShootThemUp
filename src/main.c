@@ -8,7 +8,7 @@
 #include "../include/const.h"
 #include "../include/enemy.h"
 #include "../include/collision.h"
-
+#include "../include/level.h"
 
 int main(int argc, char* argv[]) {
   printf("Le début de quelque chose de grand\n");
@@ -37,13 +37,10 @@ int main(int argc, char* argv[]) {
   int nb_enemy = 0;
   Enemy* enemies = NULL;
 
-  init_enemy(&enemies, &nb_enemy, 200, 10);
-  init_enemy(&enemies, &nb_enemy, 400, 10);
-  init_enemy(&enemies, &nb_enemy, 600, 10);
+  //init_enemy(&enemies, &nb_enemy, 200, 10);
 
-  
-  //Enemy enemy2 = init_enemy(&enemies, &nb_enemy, 600, 50);
-
+  init_level(&enemies, &nb_enemy);
+    
 
   while (!quit) {
     /* Get the time in nanoseconds at the frame beginning */
@@ -82,7 +79,7 @@ int main(int argc, char* argv[]) {
     //draw_missiles(&missiles, nb_missile);
     //draw_enemies(&enemies, nb_enemy);
     //MLV_draw_rectangle(enemy1.x, enemy1.y, enemy1.width, enemy1.width, MLV_COLOR_RED);
-    printf("%d\n", nb_missile);
+    //printf("%d\n", nb_missile);
     
 
     /* We get there at most one keyboard event each frame */

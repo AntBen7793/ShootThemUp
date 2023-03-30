@@ -15,11 +15,9 @@ int check_collision(int x, int y, int width, int height, int x2, int y2, int wid
     return 0;
 }
 
-
 void check_collision_enemy_missile(Enemy** enemies, Missile** missiles, int* nb_missile, int* nb_enemy) {
 
     for (int i = 0; i < *nb_missile; i++) {
-
         if (check_missile_collision_border(&((*missiles)[i])) == 1) {
             remove_missile(missiles, i, nb_missile);
             break;
