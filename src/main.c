@@ -35,6 +35,7 @@ int main(int argc, char* argv[]) {
 
 
   /* Music */
+  MLV_init_audio();
   MLV_Music *music = MLV_load_music("img/music.mp3");
   MLV_play_music(music, 100.0, -1);
 
