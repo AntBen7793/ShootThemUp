@@ -22,6 +22,9 @@ int main(int argc, char* argv[]) {
   int x = 0;
   int y = 800;
   int y2 = 800;
+  char** waves = NULL;
+  int nb_wave =0;
+  int current_wave =0;
   MLV_Image * background;
   MLV_Image * cloud;
   background = MLV_load_image("./img/sea_.png");
@@ -38,8 +41,8 @@ int main(int argc, char* argv[]) {
   Enemy* enemies = NULL;
 
   //init_enemy(&enemies, &nb_enemy, 200, 10);
+  init_level(&waves, &nb_wave, &current_wave);
 
-  init_level(&enemies, &nb_enemy);
     
 
   while (!quit) {
@@ -57,13 +60,15 @@ int main(int argc, char* argv[]) {
     if(y2 >= HEIGHT){
         y2 = 0;   
     }
-
     update_player(&player);
+    if(nb_enemy == 0){
+    update_level(&waves, &nb_wave, &current_wave, &enemies, &nb_enemy);
+    }
     //check_collision(player.x, player.y, player.width, player.width, enemy1.x, enemy1.y, enemy1.width, enemy1.width);
     if(event == MLV_KEY && key_sym == MLV_KEYBOARD_SPACE && state == MLV_PRESSED){
     if(nb_missile < 4){
-     init_missile(&missiles, &nb_missile, player.x+20, player.y+10);
-     init_missile(&missiles, &nb_missile, player.x+ (player.width - 30), player.y+10);
+     init_missile(&missiles, &nb_missile, player.x+10, player.y+10);
+     init_missile(&missiles, &nb_missile, player.x+ (player.width - 20), player.y+10);
      }
     }
     
@@ -104,6 +109,10 @@ int main(int argc, char* argv[]) {
     
     MLV_actualise_window();
   }
+    for(int i = 0; i < nb_wave; i++){
+        free(waves[i]);
+    }
+    free(waves);
   MLV_free_image(background);
   MLV_free_image(cloud);
   free(missiles);

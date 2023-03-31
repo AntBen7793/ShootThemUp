@@ -11,7 +11,7 @@ Player init_player(){
     player.y = 700;
     player.dx = 0;
     player.dy = 0;
-    player.width = 100;
+    player.width = 70;
     player.speed = 5;
     player.life = 100;
 
@@ -20,7 +20,11 @@ Player init_player(){
     player.sprite_right = MLV_load_image("./img/state1_right_player.png");
     player.sprite_left = MLV_load_image("./img/state1_left_player.png");
     player.sprite_forward = MLV_load_image("./img/state0_player.png");
-     
+    //MLV_resize_image(player.sprite, player.width, player.width);
+    //MLV_resize_image(player.sprite_left, player.width, player.width);
+    //MLV_resize_image(player.sprite_right, player.width, player.width);
+    //MLV_resize_image(player.sprite_forward, player.width, player.width);
+
  return player;
 }
 
@@ -34,7 +38,7 @@ void update_player(Player* player){
 
 void draw_player(Player* player){
    
-    MLV_resize_image(player->sprite, player->width, player->width);
+    
     if(player->dx > 0)
         MLV_draw_image(player->sprite_right, player->x, player->y);
     else if(player->dx < 0)

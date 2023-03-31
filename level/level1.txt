@@ -1,2 +1,8 @@
-XXXXXX
-XXXX
+X0X0X
+00000
+X0X0X
+-----
+XXXXX
+X0X0X
+-----
+X

@@ -6,17 +6,20 @@
 void init_enemy(Enemy** enemies, int* nb_enemy, int x, int y){
     Enemy enemy;
     enemy.x = x;
-    enemy.width = 100;
+    enemy.width = 70;
     enemy.y = y;
     enemy.speed = 2;
     enemy.sprite = MLV_load_image("./img/state1_enemy.png");
-     add_enemy(enemies, enemy, nb_enemy);
+    MLV_resize_image(enemy.sprite, enemy.width, enemy.width);
+    
+
+    add_enemy(enemies, enemy, nb_enemy);
 }
 
 void update_enemy(Enemy** enemies, int nb_enemy){
     //check_player_collision_border(enemy);
     for(int i = 0; i < nb_enemy; i++){
-        (*enemies)[i].y = (*enemies)[i].y + (*enemies)[i].speed;       
+        //(*enemies)[i].y = (*enemies)[i].y + (*enemies)[i].speed;       
         draw_enemy(&((*enemies)[i]));
     }   
 }
