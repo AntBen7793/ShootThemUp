@@ -21,7 +21,7 @@ typedef struct {
     int width;
     int height;
     int speed;
-    int life;
+    int dmg;
     MLV_Image * sprite;
 } Missile;
 
@@ -30,5 +30,7 @@ typedef struct {
     int y;
     int width;
     int speed;
+    int life;
+    int explosion_state;
     MLV_Image * sprite;
 } Enemy;

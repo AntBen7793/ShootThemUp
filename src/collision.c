@@ -1,5 +1,6 @@
 #include "../include/const.h"
 #include <stdio.h>
+#include <MLV/MLV_all.h>
 #include "../include/struct.h"
 #include "../include/missile.h"
 #include "../include/enemy.h"
@@ -24,8 +25,14 @@ void check_collision_enemy_missile(Enemy** enemies, Missile** missiles, int* nb_
         }  
         for (int j = 0; j < *nb_enemy; j++) {
             if (check_collision((*missiles)[i].x, (*missiles)[i].y, (*missiles)[i].width, (*missiles)[i].height, (*enemies)[j].x, (*enemies)[j].y, (*enemies)[j].width, (*enemies)[j].width) == 1) {
+                
+
+                (*enemies)[j].life = (*enemies)[j].life - (*missiles)[i].dmg;
+                //remove_enemy(enemies, j, nb_enemy);
                 remove_missile(missiles, i, nb_missile);
-                remove_enemy(enemies, j, nb_enemy);
+                
+                //printf("life => %d\n", (*enemies)[j].life);
+                
                 break;
             }
         }

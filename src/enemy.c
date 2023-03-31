@@ -9,6 +9,8 @@ void init_enemy(Enemy** enemies, int* nb_enemy, int x, int y){
     enemy.width = 70;
     enemy.y = y;
     enemy.speed = 2;
+    enemy.explosion_state = 0;
+    enemy.life = 100;
     enemy.sprite = MLV_load_image("./img/state1_enemy.png");
     MLV_resize_image(enemy.sprite, enemy.width, enemy.width);
     
@@ -16,11 +18,48 @@ void init_enemy(Enemy** enemies, int* nb_enemy, int x, int y){
     add_enemy(enemies, enemy, nb_enemy);
 }
 
-void update_enemy(Enemy** enemies, int nb_enemy){
+void update_enemy(Enemy** enemies, int* nb_enemy){
     //check_player_collision_border(enemy);
-    for(int i = 0; i < nb_enemy; i++){
-        //(*enemies)[i].y = (*enemies)[i].y + (*enemies)[i].speed;       
+    //sleep(0.5);
+    for(int i = 0; i < *nb_enemy; i++){
+        //(*enemies)[i].y = (*enemies)[i].y + (*enemies)[i].speed;          
         draw_enemy(&((*enemies)[i]));
+        if((*enemies)[i].life <= 0){
+            printf(" life => %d\n", (*enemies)[i].life);
+            (*enemies)[i].explosion_state++;
+            switch ((*enemies)[i].explosion_state)
+            {
+            case 0:
+                (*enemies)[i].sprite = MLV_load_image("./img/explosion_state0.png");
+                break;
+            case 1:
+                (*enemies)[i].sprite = MLV_load_image("./img/explosion_state1.png");
+                break;  
+            case 2:
+                (*enemies)[i].sprite = MLV_load_image("./img/explosion_state2.png");
+                break;
+            case 3:
+                (*enemies)[i].sprite = MLV_load_image("./img/explosion_state3.png");
+                break;
+            case 4:
+                (*enemies)[i].sprite = MLV_load_image("./img/explosion_state4.png");
+                break;
+            case 5:
+                (*enemies)[i].sprite = MLV_load_image("./img/explosion_state5.png");
+                break;
+            case 6:
+                (*enemies)[i].sprite = MLV_load_image("./img/explosion_state6.png");
+                break;
+            
+            default:
+                //(*enemies)[i].sprite = MLV_load_image("./img/explosion_state0.png");
+                break;
+            }
+            
+            if((*enemies)[i].explosion_state >=10){
+                remove_enemy(enemies, i, nb_enemy);
+            }
+        }
     }   
 }
 

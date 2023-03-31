@@ -11,7 +11,7 @@ void init_missile(Missile** missiles, int* nb_missile, int x, int y){
     missile.width = 10;
     missile.height = 30;
     missile.speed = 15;
-    missile.life = 100;
+    missile.dmg = 50;
     missile.sprite = MLV_load_image("./img/bullet.png");
     add_missile(missiles, missile, nb_missile);
 }

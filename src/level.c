@@ -23,7 +23,7 @@ void update_level(char*** waves, int* nb_wave, int* current_waves, Enemy** enemi
             line_size = strlen((*waves)[i]);
             int x = (WIDTH - line_size * ENEMY_W) / 2;
             for(int j = 0; j < line_size; j++){
-                printf("%c", (*waves)[i][j]);
+                //printf("%c", (*waves)[i][j]);
                 if((*waves)[i][j] == 'X'){
                     init_enemy(enemies, nb_enemy, x ,y);
                      x += ENEMY_W;
@@ -36,7 +36,7 @@ void update_level(char*** waves, int* nb_wave, int* current_waves, Enemy** enemi
                 }
             }
             y += ENEMY_W + 20;
-            printf("\n"); 
+            //printf("\n"); 
 
         }
 }
@@ -61,7 +61,7 @@ void init_level(char*** waves, int* nb_wave, int* current_wave) {
     while (fgets(line, 100, fptr) != NULL) {
         // Ajoute la ligne au tableau de vagues
         *waves = (char**)realloc(*waves, (*nb_wave + 1) * sizeof(char*));
-        printf("Realloc %d char*\n", *nb_wave+1);
+        //printf("Realloc %d char*\n", *nb_wave+1);
         if(*waves == NULL) {
             printf("Waves add error...\n");
             return;
@@ -74,7 +74,7 @@ void init_level(char*** waves, int* nb_wave, int* current_wave) {
         }
         if(line[strlen(line)-1] == '\n') line[strlen(line)-1] = '\0';
         strcpy((*waves)[*nb_wave], line);
-        printf("malloc %ld char : %s (= %s)\n", strlen(line)+1, line, (*waves)[*nb_wave]);
+        //printf("malloc %ld char : %s (= %s)\n", strlen(line)+1, line, (*waves)[*nb_wave]);
 
         *nb_wave = (*nb_wave) + 1;       
     }

@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
 
   /* Music */
   MLV_init_audio();
-  MLV_Music *music = MLV_load_music("img/music.mp3");
+  MLV_Music * music = MLV_load_music("img/music.mp3");
   MLV_play_music(music, 100.0, -1);
 
 
@@ -85,7 +85,7 @@ int main(int argc, char* argv[]) {
     draw_player(&player);
     
     update_missile(&missiles, nb_missile);
-    update_enemy(&enemies, nb_enemy);
+    update_enemy(&enemies, &nb_enemy);
     check_collision_enemy_missile(&enemies, &missiles, &nb_missile, &nb_enemy);
     //draw_missiles(&missiles, nb_missile);
     //draw_enemies(&enemies, nb_enemy);
@@ -110,7 +110,7 @@ int main(int argc, char* argv[]) {
 
     /* We force here to wait if the frame was too short */
     if (accum < (1.0 / 48.0)) {
-        MLV_wait_milliseconds((int)(((1.0 / 60.0) - accum) * 1000));
+        MLV_wait_milliseconds((int)(((1.0 / 40.0) - accum) * 1000));
     }
     
     MLV_actualise_window();
