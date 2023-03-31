@@ -32,7 +32,12 @@ int main(int argc, char* argv[]) {
   MLV_resize_image(cloud, WIDTH, HEIGHT);
   MLV_resize_image(background, WIDTH, HEIGHT);
   Player player = init_player();
-  
+
+
+  /* Music */
+  MLV_Music *music = MLV_load_music("img/music.mp3");
+  MLV_play_music(music, 100.0, -1);
+
 
   int nb_missile = 0;
   Missile* missiles = NULL;
@@ -117,6 +122,9 @@ int main(int argc, char* argv[]) {
   MLV_free_image(cloud);
   free(missiles);
   
+  MLV_stop_music();
+  MLV_free_music(music);
+
   MLV_free_window();
   printf("fin\n");
   return 0;
