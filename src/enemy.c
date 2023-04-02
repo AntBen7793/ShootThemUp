@@ -3,6 +3,9 @@
 #include "../include/const.h"
 #include "../include/enemy.h"
 
+
+
+
 void init_enemy(Enemy** enemies, int* nb_enemy, int x, int y){
     Enemy enemy;
     enemy.x = x;
@@ -14,18 +17,17 @@ void init_enemy(Enemy** enemies, int* nb_enemy, int x, int y){
     enemy.sprite = MLV_load_image("./img/state1_enemy.png");
     MLV_resize_image(enemy.sprite, enemy.width, enemy.width);
     
-
     add_enemy(enemies, enemy, nb_enemy);
 }
 
-void update_enemy(Enemy** enemies, int* nb_enemy){
+/*void update_enemy(Enemy** enemies, int* nb_enemy){
     //check_player_collision_border(enemy);
     //sleep(0.5);
     for(int i = 0; i < *nb_enemy; i++){
-        //(*enemies)[i].y = (*enemies)[i].y + (*enemies)[i].speed;          
+        (*enemies)[i].y = (*enemies)[i].y + (*enemies)[i].speed;          
         draw_enemy(&((*enemies)[i]));
         if((*enemies)[i].life <= 0){
-            printf(" life => %d\n", (*enemies)[i].life);
+            //printf(" life => %d\n", (*enemies)[i].life);
             (*enemies)[i].explosion_state++;
             switch ((*enemies)[i].explosion_state)
             {
@@ -61,8 +63,26 @@ void update_enemy(Enemy** enemies, int* nb_enemy){
             }
         }
     }   
-}
+}*/
 
+
+void update_enemy(Enemy** enemies, int* nb_enemy, MLV_Image** explosion_images) {
+    for (int i = 0; i < *nb_enemy; i++) {
+        Enemy* enemy = &((*enemies)[i]);
+        enemy->y += enemy->speed;
+        draw_enemy(enemy);
+        if (enemy->life <= 0) {
+            enemy->explosion_state++;
+            if (enemy->explosion_state < 6) {
+                enemy->sprite = explosion_images[enemy->explosion_state];
+            } 
+            if(enemy->explosion_state >8){
+                remove_enemy(enemies, i, nb_enemy);
+                i--;
+            }
+        }
+    }
+}
 void draw_enemy(Enemy* enemy){
 
         MLV_draw_image((*enemy).sprite, (*enemy).x, (*enemy).y);

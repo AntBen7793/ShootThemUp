@@ -49,7 +49,12 @@ int main(int argc, char* argv[]) {
   //init_enemy(&enemies, &nb_enemy, 200, 10);
   init_level(&waves, &nb_wave, &current_wave);
 
-    
+MLV_Image** explosion_images = malloc(6 * sizeof(MLV_Image*));
+for (int i = 0; i < 6; i++) {
+    char filename[50];
+    sprintf(filename, "./img/explosion_state%d.png", i);
+    explosion_images[i] = MLV_load_image(filename);
+}
 
   while (!quit) {
     /* Get the time in nanoseconds at the frame beginning */
@@ -85,7 +90,7 @@ int main(int argc, char* argv[]) {
     draw_player(&player);
     
     update_missile(&missiles, nb_missile);
-    update_enemy(&enemies, &nb_enemy);
+    update_enemy(&enemies, &nb_enemy, explosion_images);
     check_collision_enemy_missile(&enemies, &missiles, &nb_missile, &nb_enemy);
     //draw_missiles(&missiles, nb_missile);
     //draw_enemies(&enemies, nb_enemy);
@@ -115,10 +120,10 @@ int main(int argc, char* argv[]) {
     
     MLV_actualise_window();
   }
-    for(int i = 0; i < nb_wave; i++){
-        free(waves[i]);
-    }
-    free(waves);
+  for(int i = 0; i < nb_wave; i++){
+    free(waves[i]);
+  }
+  free(waves);
   MLV_free_image(background);
   MLV_free_image(cloud);
   free(missiles);

@@ -16,7 +16,7 @@ void update_level(char*** waves, int* nb_wave, int* current_waves, Enemy** enemi
                 num_enemies++;
             }
         }*/
-        int y = 10;
+        int y = -ENEMY_W;
         
         int line_size;
         for(int i = *current_waves; i < *nb_wave; i++){
