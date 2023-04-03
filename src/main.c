@@ -36,7 +36,8 @@ int main(int argc, char* argv[]) {
 
   /* Music */
   MLV_init_audio();
-  MLV_Music * music = MLV_load_music("img/music.mp3");
+  MLV_Sound* rocket =  MLV_load_sound("soud/rocket.mp3");
+  MLV_Music * music = MLV_load_music("sound/music.mp3");
   MLV_play_music(music, 100.0, -1);
 
 
@@ -80,6 +81,7 @@ for (int i = 0; i < 6; i++) {
     if(nb_missile < 4){
      init_missile(&missiles, &nb_missile, player.x+10, player.y+10);
      init_missile(&missiles, &nb_missile, player.x+ (player.width - 20), player.y+10);
+     //MLV_play_sound(rocket,100);
      }
     }
     
