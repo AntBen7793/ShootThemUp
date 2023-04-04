@@ -31,6 +31,7 @@ typedef struct {
     int width;
     int speed;
     int life;
+    int mvt;
     int explosion_state;
     MLV_Image * sprite;
 } Enemy;

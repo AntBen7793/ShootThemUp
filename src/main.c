@@ -36,11 +36,11 @@ int main(int argc, char* argv[]) {
 
   /* Music */
   MLV_init_audio();
-  MLV_Sound* rocket =  MLV_load_sound("sound/rocket.ogg");
+  //MLV_Sound* rocket =  MLV_load_sound("soud/rocket.mp3");
   MLV_Music * music = MLV_load_music("sound/music.mp3");
-  MLV_play_music(music, 100.0, -1);
-
-
+  MLV_play_music(music, 1.0, -1);
+  MLV_Sound * explosion =  MLV_load_sound("sound/explosion.ogg");
+  MLV_Sound * rocket =  MLV_load_sound("sound/rocket.ogg");
   int nb_missile = 0;
   Missile* missiles = NULL;
 
@@ -81,7 +81,8 @@ for (int i = 0; i < 6; i++) {
     if(nb_missile < 4){
      init_missile(&missiles, &nb_missile, player.x+10, player.y+10);
      init_missile(&missiles, &nb_missile, player.x+ (player.width - 20), player.y+10);
-     MLV_play_sound(rocket,1);
+     MLV_play_sound(rocket,100);
+
      }
     }
     
@@ -92,7 +93,7 @@ for (int i = 0; i < 6; i++) {
     draw_player(&player);
     
     update_missile(&missiles, nb_missile);
-    update_enemy(&enemies, &nb_enemy, explosion_images);
+    update_enemy(&enemies, &nb_enemy, explosion_images, &explosion);
     check_collision_enemy_missile(&enemies, &missiles, &nb_missile, &nb_enemy);
     //draw_missiles(&missiles, nb_missile);
     //draw_enemies(&enemies, nb_enemy);
@@ -129,7 +130,8 @@ for (int i = 0; i < 6; i++) {
   MLV_free_image(background);
   MLV_free_image(cloud);
   free(missiles);
-  
+  MLV_free_sound(explosion);
+  MLV_free_sound(rocket);
   MLV_stop_music();
   MLV_free_music(music);
 

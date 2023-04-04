@@ -14,6 +14,7 @@ void init_enemy(Enemy** enemies, int* nb_enemy, int x, int y){
     enemy.speed = 2;
     enemy.explosion_state = 0;
     enemy.life = 100;
+    enemy.mvt = 0;
     enemy.sprite = MLV_load_image("./img/state1_enemy.png");
     MLV_resize_image(enemy.sprite, enemy.width, enemy.width);
     
@@ -65,23 +66,47 @@ void init_enemy(Enemy** enemies, int* nb_enemy, int x, int y){
     }   
 }*/
 
-
-void update_enemy(Enemy** enemies, int* nb_enemy, MLV_Image** explosion_images) {
+void update_enemy(Enemy** enemies, int* nb_enemy, MLV_Image** explosion_images,MLV_Sound** sound) {
     for (int i = 0; i < *nb_enemy; i++) {
         Enemy* enemy = &((*enemies)[i]);
-        enemy->y += enemy->speed;
+        //enemy->y += enemy->speed;
+        movement_enemy(enemy);
         draw_enemy(enemy);
         if (enemy->life <= 0) {
             enemy->explosion_state++;
             if (enemy->explosion_state < 6) {
                 enemy->sprite = explosion_images[enemy->explosion_state];
-            } 
+            }
+
+            if(enemy->explosion_state == 1){
+                MLV_play_sound((*sound), 1.0);
+            }
             if(enemy->explosion_state >8){
+                //MLV_Sound * sound =  MLV_load_sound("sound/explosion.ogg");
+                
                 remove_enemy(enemies, i, nb_enemy);
+                //MLV_free_sound(sound);
                 i--;
             }
         }
     }
+}
+void movement_enemy(Enemy* enemy){
+    //printf("test => %d\n", enemy->mvt);
+    switch (enemy->mvt)
+            {
+            case 0:
+                 enemy->y += enemy->speed;
+                 break;
+            case 1:
+                 enemy->y += enemy->speed+50;
+                 break;
+            
+            
+            default:
+                 
+                break;
+            }
 }
 void draw_enemy(Enemy* enemy){
 
