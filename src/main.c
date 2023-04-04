@@ -2,7 +2,7 @@
 #include <MLV/MLV_all.h>
 #include <time.h>
 #include "../include/struct.h"
-
+#include "../include/missile_enemy.h"
 #include "../include/missile.h"
 #include "../include/player.h"
 #include "../include/const.h"
@@ -43,7 +43,8 @@ int main(int argc, char* argv[]) {
   MLV_Sound * rocket =  MLV_load_sound("sound/rocket.ogg");
   int nb_missile = 0;
   Missile* missiles = NULL;
-
+  int nb_missile_enemy = 0;
+  Missile_enemy* missiles_enemy = NULL;
   int nb_enemy = 0;
   Enemy* enemies = NULL;
 
@@ -91,14 +92,15 @@ for (int i = 0; i < 6; i++) {
     MLV_draw_image(cloud, x, y2);
     MLV_draw_image(cloud, x, y2-HEIGHT);
     draw_player(&player);
-    
+    update_missile_enemy(&missiles_enemy, nb_missile_enemy);
     update_missile(&missiles, nb_missile);
-    update_enemy(&enemies, &nb_enemy, explosion_images, &explosion);
+    update_enemy(&enemies, &nb_enemy, explosion_images, &explosion, &missiles_enemy, &nb_missile_enemy);
     check_collision_enemy_missile(&enemies, &missiles, &nb_missile, &nb_enemy);
+    check_collision_enemy_missile_player(&player, &missiles_enemy, &nb_missile_enemy, &quit);
     //draw_missiles(&missiles, nb_missile);
     //draw_enemies(&enemies, nb_enemy);
     //MLV_draw_rectangle(enemy1.x, enemy1.y, enemy1.width, enemy1.width, MLV_COLOR_RED);
-    //printf("%d\n", nb_missile);
+    printf("%d\n", player.life);
     
 
     /* We get there at most one keyboard event each frame */
@@ -130,11 +132,11 @@ for (int i = 0; i < 6; i++) {
   MLV_free_image(background);
   MLV_free_image(cloud);
   free(missiles);
+  free(missiles_enemy);
   MLV_free_sound(explosion);
   MLV_free_sound(rocket);
   MLV_stop_music();
   MLV_free_music(music);
-
   MLV_free_window();
   printf("fin\n");
   return 0;

@@ -3,6 +3,9 @@
 #include "../include/struct.h"
 #include "../include/enemy.h"
 #include "../include/const.h"
+#include "../include/missile_enemy.h"
+
+
 void update_level(char*** waves, int* nb_wave, int* current_waves, Enemy** enemies , int* nb_enemy){
     /*if(ennemy_nb == 0) {
         for(int i = 0; i <)
@@ -25,17 +28,20 @@ void update_level(char*** waves, int* nb_wave, int* current_waves, Enemy** enemi
             for(int j = 0; j < line_size; j++){
                 //printf("%c", (*waves)[i][j]);
                 if((*waves)[i][j] == 'X'){
-                    init_enemy(enemies, nb_enemy, x ,y);
+                    init_enemy(enemies, nb_enemy, x ,y, 0);
                      x += ENEMY_W;
                 }else if ((*waves)[i][j] == '0'){
                      x += ENEMY_W;
+                }else if ((*waves)[i][j] == 'V'){
+                    init_enemy(enemies, nb_enemy, x ,y, 1);
+                     x += ENEMY_W;
                 }else if ((*waves)[i][j] == '-'){
-                    y += ENEMY_W + 20;
+                    y += ENEMY_W;
                     *current_waves = i+1;
                     return;
                 }
             }
-            y += ENEMY_W + 20;
+            y += ENEMY_W;
             //printf("\n"); 
 
         }

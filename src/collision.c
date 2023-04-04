@@ -3,7 +3,9 @@
 #include <MLV/MLV_all.h>
 #include "../include/struct.h"
 #include "../include/missile.h"
+#include "../include/missile_enemy.h"
 #include "../include/enemy.h"
+#include "../include/player.h"
 
 
 int check_collision(int x, int y, int width, int height, int x2, int y2, int width2, int height2){
@@ -35,6 +37,25 @@ void check_collision_enemy_missile(Enemy** enemies, Missile** missiles, int* nb_
                 
                 break;
             }
+        }
+    }
+}
+
+void check_collision_enemy_missile_player(Player* player, Missile_enemy** missiles_enemy, int* nb_missile_enemy, int* quit) {
+
+    for (int i = 0; i < *nb_missile_enemy; i++) {
+        if (check_missile_enemy_collision_border(&((*missiles_enemy)[i])) == 1) {
+            remove_missile_enemy(missiles_enemy, i, nb_missile_enemy);
+            break;
+        }
+        if(check_collision((*missiles_enemy)[i].x, (*missiles_enemy)[i].y, (*missiles_enemy)[i].width, (*missiles_enemy)[i].height, (*player).x, (*player).y, (*player).width, (*player).width) == 1){
+            (*player).life = (*player).life - (*missiles_enemy)[i].dmg;
+            remove_missile_enemy(missiles_enemy, i, nb_missile_enemy);
+        }
+        if((*player).life <= 0){
+            printf("GAME OVER");
+            //(*player).life = 100;
+            (*quit) = 1;
         }
     }
 }

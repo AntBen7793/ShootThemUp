@@ -1,12 +1,12 @@
 CC=gcc
 CFLAGS=-Wall -std=c17 -pthread
 LDFLAGS=-lm -lMLV
-OBJ=main.o player.o collision.o enemy.o missile.o level.o
+OBJ=main.o player.o collision.o enemy.o missile.o level.o missile_enemy.o
 SRC=src/
 projet: $(OBJ)
 	$(CC) -o projet $(OBJ) $(LDFLAGS) 
 
-main.o: ${SRC}main.c ${SRC}player.c ${SRC}collision.c ${SRC}enemy.c ${SRC}missile.c ${SRC}level.c 
+main.o: ${SRC}main.c ${SRC}player.c ${SRC}collision.c ${SRC}enemy.c ${SRC}missile.c ${SRC}level.c ${SRC}missile_enemy.c
 	$(CC) -c ${SRC}main.c $(CFLAGS)
 
 player.o: ${SRC}player.c
@@ -23,6 +23,9 @@ missile.o: ${SRC}missile.c
 
 level.o: ${SRC}level.c
 	$(CC) -c ${SRC}level.c $(CFLAGS)
+
+missile_enemy.o: ${SRC}missile_enemy.c
+	$(CC) -c ${SRC}missile_enemy.c $(CFLAGS)
 
 clean: 
 	rm -f *.o
