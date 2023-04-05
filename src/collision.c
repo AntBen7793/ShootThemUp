@@ -40,7 +40,6 @@ void check_collision_enemy_missile(Enemy** enemies, Missile** missiles, int* nb_
         }
     }
 }
-
 void check_collision_enemy_missile_player(Player* player, Missile_enemy** missiles_enemy, int* nb_missile_enemy, int* quit) {
 
     for (int i = 0; i < *nb_missile_enemy; i++) {
@@ -50,6 +49,7 @@ void check_collision_enemy_missile_player(Player* player, Missile_enemy** missil
         }
         if(check_collision((*missiles_enemy)[i].x, (*missiles_enemy)[i].y, (*missiles_enemy)[i].width, (*missiles_enemy)[i].height, (*player).x, (*player).y, (*player).width, (*player).width) == 1){
             (*player).life = (*player).life - (*missiles_enemy)[i].dmg;
+            if ((*player).life < 0) (*player).life = 0;
             remove_missile_enemy(missiles_enemy, i, nb_missile_enemy);
         }
         if((*player).life <= 0){

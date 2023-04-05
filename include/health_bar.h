@@ -1,0 +1,1 @@
+void draw_health_bar(int x, int y, int width, int height, int health);

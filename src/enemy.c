@@ -123,11 +123,6 @@ void shoot_enemy(Enemy* enemy,Missile_enemy** missiles_enemy, int* nb_missile_en
                 break;
             }
 }
-
-
-
-
-
 void movement_enemy(Enemy* enemy){
     //printf("test => %d\n", enemy->type);
     switch (enemy->type)

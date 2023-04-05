@@ -6,7 +6,7 @@
 #include "../include/missile_enemy.h"
 
 
-void update_level(char*** waves, int* nb_wave, int* current_waves, Enemy** enemies , int* nb_enemy){
+void update_level(char*** waves, int* nb_wave, int* current_waves, Enemy** enemies , int* nb_enemy, int* quit){
     /*if(ennemy_nb == 0) {
         for(int i = 0; i <)
         create_ennemies(waves[current_wave]);
@@ -35,6 +35,9 @@ void update_level(char*** waves, int* nb_wave, int* current_waves, Enemy** enemi
                 }else if ((*waves)[i][j] == 'V'){
                     init_enemy(enemies, nb_enemy, x ,y, 1);
                      x += ENEMY_W;
+                }else if ((*waves)[i][j] == 'F'){
+                    *quit =1;
+                    return;
                 }else if ((*waves)[i][j] == '-'){
                     y += ENEMY_W;
                     *current_waves = i+1;
