@@ -1,1 +1,1 @@
-void init_party();
+void init_party(double* effect_volume, double* music_volume, int level);

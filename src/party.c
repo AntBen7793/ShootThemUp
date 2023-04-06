@@ -12,7 +12,7 @@
 #include "../include/level.h"
 #include "../include/party.h"
 
-void init_party()
+void init_party(double* effect_volume, double* music_volume,int level)
 {
   printf("Le début de quelque chose de grand\n");
 
@@ -40,7 +40,7 @@ void init_party()
   MLV_init_audio();
   // MLV_Sound* rocket =  MLV_load_sound("soud/rocket.mp3");
   MLV_Music *music = MLV_load_music("sound/DangerZone.mp3");
-  MLV_play_music(music, 0.2, -1);
+  MLV_play_music(music, *music_volume, -1);
   MLV_Sound *hit = MLV_load_sound("sound/hit.wav");
   MLV_Sound *explosion = MLV_load_sound("sound/explosion.ogg");
   MLV_Sound *rocket = MLV_load_sound("sound/rocket.ogg");
@@ -52,7 +52,7 @@ void init_party()
   Enemy *enemies = NULL;
 
   // init_enemy(&enemies, &nb_enemy, 200, 10);
-  init_level(&waves, &nb_wave, &current_wave);
+  init_level(&waves, &nb_wave, &current_wave, level);
 
   MLV_Image **explosion_images = malloc(6 * sizeof(MLV_Image *));
   for (int i = 0; i < 6; i++)
@@ -85,14 +85,14 @@ void init_party()
     {
       update_level(&waves, &nb_wave, &current_wave, &enemies, &nb_enemy, &quit);
     }
-    // check_collision(player.x, player.y, player.width, player.width, enemy1.x, enemy1.y, enemy1.width, enemy1.width);
+
     if (event == MLV_KEY && key_sym == MLV_KEYBOARD_SPACE && state == MLV_PRESSED)
     {
       if (nb_missile < 4)
       {
         init_missile(&missiles, &nb_missile, player.x + 10, player.y + 10);
         init_missile(&missiles, &nb_missile, player.x + (player.width - 20), player.y + 10);
-        MLV_play_sound(rocket, 100);
+        MLV_play_sound(rocket, *effect_volume);
       }
     }
 
@@ -104,13 +104,11 @@ void init_party()
     draw_player(&player);
     update_missile_enemy(&missiles_enemy, nb_missile_enemy);
     update_missile(&missiles, nb_missile);
-    update_enemy(&enemies, &nb_enemy, explosion_images, &explosion, &missiles_enemy, &nb_missile_enemy);
-    check_collision_enemy_missile(&enemies, &missiles, &nb_missile, &nb_enemy, &hit);
-    check_collision_enemy_missile_player(&player, &missiles_enemy, &nb_missile_enemy, &quit, &hit);
+    update_enemy(&enemies, &nb_enemy, explosion_images, &explosion, &missiles_enemy, &nb_missile_enemy, effect_volume);
+    check_collision_enemy_missile(&enemies, &missiles, &nb_missile, &nb_enemy, &hit, effect_volume);
+    check_collision_enemy_missile_player(&player, &missiles_enemy, &nb_missile_enemy, &quit, &hit, effect_volume);
     draw_health_bar(300, 750, 150, 10, player.life);
-    // draw_missiles(&missiles, nb_missile);
-    // draw_enemies(&enemies, nb_enemy);
-    // MLV_draw_rectangle(enemy1.x, enemy1.y, enemy1.width, enemy1.width, MLV_COLOR_RED);
+
     // printf("%d\n", player.life);
 
     /* We get there at most one keyboard event each frame */

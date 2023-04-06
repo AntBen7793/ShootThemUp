@@ -71,7 +71,7 @@ void init_enemy(Enemy** enemies, int* nb_enemy, int x, int y, int type){
     }   
 }*/
 
-void update_enemy(Enemy** enemies, int* nb_enemy, MLV_Image** explosion_images,MLV_Sound** sound, Missile_enemy** missiles_enemy, int* nb_missile_enemy) {
+void update_enemy(Enemy** enemies, int* nb_enemy, MLV_Image** explosion_images,MLV_Sound** sound, Missile_enemy** missiles_enemy, int* nb_missile_enemy,double* effect_volume) {
     for (int i = 0; i < *nb_enemy; i++) {
         Enemy* enemy = &((*enemies)[i]);
         //enemy->y += enemy->speed;
@@ -86,7 +86,7 @@ void update_enemy(Enemy** enemies, int* nb_enemy, MLV_Image** explosion_images,M
                 enemy->sprite = explosion_images[enemy->explosion_state];
             }
             if(enemy->explosion_state == 1){
-                MLV_play_sound((*sound), 1.0);
+                MLV_play_sound((*sound), *effect_volume);
             }
             if(enemy->explosion_state >8){
                 remove_enemy(enemies, i, nb_enemy);

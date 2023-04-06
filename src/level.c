@@ -37,12 +37,13 @@ void update_level(char*** waves, int* nb_wave, int* current_waves, Enemy** enemi
 
         }
 }
-void init_level(char*** waves, int* nb_wave, int* current_wave) {
+void init_level(char*** waves, int* nb_wave, int* current_wave, int level) {
     
     FILE *fptr;
-    
+    char path_text[55];
+    snprintf(path_text, sizeof(path_text), "./level/level%d.txt", level);
     // Ouvre le fichier en mode lecture
-    fptr = fopen("./level/level1.txt", "r");
+    fptr = fopen(path_text, "r");
 
     // Vérifie si le fichier a été ouvert avec succès
     if (fptr == NULL) {

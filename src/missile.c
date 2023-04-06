@@ -1,6 +1,5 @@
 #include "../include/struct.h"
 #include "../include/missile.h"
-
 #include <string.h>
 
 
