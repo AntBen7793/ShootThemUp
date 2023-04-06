@@ -18,7 +18,7 @@ void init_enemy(Enemy** enemies, int* nb_enemy, int x, int y, int type){
     if(type == 0){
         enemy.sprite = MLV_load_image("./img/state1_enemy.png");
     }
-    if(type == 1){
+    else if(type == 1){
         enemy.sprite = MLV_load_image("./img/state1_enemy.png");
     }
     
@@ -152,9 +152,7 @@ void add_enemy(Enemy** enemies, Enemy enemy, int* nb_enemy){
     }
     (*enemies)[*nb_enemy] = enemy;
     *nb_enemy = (*nb_enemy) + 1;
-
-    
-    
+ 
 }
 
 void remove_enemy(Enemy** enemies, int index, int* nb_enemy) {

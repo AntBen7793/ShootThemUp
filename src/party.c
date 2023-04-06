@@ -23,8 +23,8 @@ void init_party()
   MLV_Button_state state;
   double accum;
   int x = 0;
-  int y = 800;
-  int y2 = 800;
+  int y = HEIGHT;
+  int y2 = HEIGHT;
   char **waves = NULL;
   int nb_wave = 0;
   int current_wave = 0;
@@ -40,7 +40,8 @@ void init_party()
   MLV_init_audio();
   // MLV_Sound* rocket =  MLV_load_sound("soud/rocket.mp3");
   MLV_Music *music = MLV_load_music("sound/DangerZone.mp3");
-  MLV_play_music(music, 0.8, -1);
+  MLV_play_music(music, 0.2, -1);
+  MLV_Sound *hit = MLV_load_sound("sound/hit.wav");
   MLV_Sound *explosion = MLV_load_sound("sound/explosion.ogg");
   MLV_Sound *rocket = MLV_load_sound("sound/rocket.ogg");
   int nb_missile = 0;
@@ -104,8 +105,8 @@ void init_party()
     update_missile_enemy(&missiles_enemy, nb_missile_enemy);
     update_missile(&missiles, nb_missile);
     update_enemy(&enemies, &nb_enemy, explosion_images, &explosion, &missiles_enemy, &nb_missile_enemy);
-    check_collision_enemy_missile(&enemies, &missiles, &nb_missile, &nb_enemy);
-    check_collision_enemy_missile_player(&player, &missiles_enemy, &nb_missile_enemy, &quit);
+    check_collision_enemy_missile(&enemies, &missiles, &nb_missile, &nb_enemy, &hit);
+    check_collision_enemy_missile_player(&player, &missiles_enemy, &nb_missile_enemy, &quit, &hit);
     draw_health_bar(300, 750, 150, 10, player.life);
     // draw_missiles(&missiles, nb_missile);
     // draw_enemies(&enemies, nb_enemy);
@@ -145,6 +146,7 @@ void init_party()
   free(missiles_enemy);
   MLV_free_sound(explosion);
   MLV_free_sound(rocket);
+  MLV_free_sound(hit);
   MLV_stop_music();
   MLV_free_music(music);
 

@@ -6,12 +6,19 @@
 #include "../include/const.h"
 #include "../include/party.h"
 
-void draw_button(int x, int y, int w, int h, char *text, MLV_Font *font)
+void draw_button(int x, int y, int w, int h, char *text, MLV_Font *font, int mouse_x, int mouse_y)
 {
     int text_width, text_height;
     MLV_get_size_of_text(text, &text_width, &text_height);
+    MLV_Color text_color = MLV_COLOR_WHITE;
 
-    MLV_draw_text_box_with_font(x, y, w, h, text, font, 1, MLV_COLOR_WHITE, MLV_COLOR_WHITE, MLV_COLOR_NAVY_BLUE, MLV_TEXT_CENTER, MLV_TEXT_CENTER, MLV_TEXT_CENTER);
+    if (
+        mouse_x >= x && mouse_x <= x + w &&
+        mouse_y >= y && mouse_y <= y + h)
+    {
+        text_color = MLV_COLOR_ORANGE1;
+    }
+    MLV_draw_text_box_with_font(x, y, w, h, text, font, 1, MLV_COLOR_WHITE, text_color, MLV_COLOR_NAVY_BLUE, MLV_TEXT_CENTER, MLV_TEXT_CENTER, MLV_TEXT_CENTER);
 }
 
 void init_menu()
@@ -21,8 +28,10 @@ void init_menu()
     int button_height = 70;
     int button_x = WIDTH / 2 - button_width / 2;
     int button_y = 400;
-    int button_x2 = WIDTH / 2 - button_width / 2;
+
     int button_y2 = 500;
+
+    int button_y3 = 600;
     MLV_Font *font = MLV_load_font("./font/ARCADECLASSIC.ttf", 50);
     double accum;
     int quit = 0;
@@ -62,8 +71,9 @@ void init_menu()
         MLV_draw_image(cloud, x, y2);
         MLV_draw_image(cloud, x, y2 - HEIGHT);
         MLV_draw_image(logo, 100, 100);
-        draw_button(button_x, button_y, button_width, button_height, "Play", font);
-        draw_button(button_x2, button_y2, button_width, button_height, "Setting", font);
+        draw_button(button_x, button_y, button_width, button_height, "Play", font, mouse_x, mouse_y);
+        draw_button(button_x, button_y2, button_width, button_height, "Setting", font, mouse_x, mouse_y);
+        draw_button(button_x, button_y3, button_width, button_height, "Leave", font, mouse_x, mouse_y);
         MLV_get_mouse_position(&mouse_x, &mouse_y);
         if (MLV_get_mouse_button_state(MLV_BUTTON_LEFT) == MLV_PRESSED &&
             mouse_x >= button_x && mouse_x <= button_x + button_width &&
@@ -73,6 +83,12 @@ void init_menu()
             init_party();
             /*Stop update menu until update party is finish*/
             MLV_play_music(music, 1.0, -1);
+        }
+        if (MLV_get_mouse_button_state(MLV_BUTTON_LEFT) == MLV_PRESSED &&
+            mouse_x >= button_x && mouse_x <= button_x + button_width &&
+            mouse_y >= button_y3 && mouse_y <= button_y3 + button_height)
+        {
+            return;
         }
         /* Get the time in nanoseconds at the frame ending */
         clock_gettime(CLOCK_REALTIME, &new);

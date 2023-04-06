@@ -7,18 +7,6 @@
 
 
 void update_level(char*** waves, int* nb_wave, int* current_waves, Enemy** enemies , int* nb_enemy, int* quit){
-    /*if(ennemy_nb == 0) {
-        for(int i = 0; i <)
-        create_ennemies(waves[current_wave]);
-        current_wave++
-    }*/
-        /*while (fgets(line, 100, fptr) != NULL) {
-        int num_enemies = 0;
-        for (int i = *wave; line[i] != '\0'; i++) {
-            if(line[i] == 'X' || line[i] == '0'){
-                num_enemies++;
-            }
-        }*/
         int y = -ENEMY_W;
         
         int line_size;

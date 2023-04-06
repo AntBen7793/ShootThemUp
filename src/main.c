@@ -6,7 +6,6 @@
 
 int main(int argc, char* argv[]) {
   MLV_create_window("Projet", "", WIDTH, HEIGHT);
-  //init_party();
   init_menu();
   MLV_free_window();
   return 0;
