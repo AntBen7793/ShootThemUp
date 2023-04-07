@@ -71,6 +71,7 @@ void init_menu(double *music_volume, double *effect_volume, double *new_music_vo
     int main_menu_state = 1; // 1 pour afficher le menu principal, 0 pour le masquer
     int setting_menu_state = 0;
     int level_menu_state = 0;
+    int pressed = 0;
     MLV_Image *background = MLV_load_image("./img/sea_.png");
     MLV_Image *cloud = MLV_load_image("./img/cloud.png");
     MLV_Image *logo = MLV_load_image("./img/topgun.png");
@@ -101,7 +102,7 @@ void init_menu(double *music_volume, double *effect_volume, double *new_music_vo
         MLV_draw_image(cloud, x, y2);
         MLV_draw_image(cloud, x, y2 - HEIGHT);
         MLV_draw_image(logo, 100, 100);
-        
+
         if (*music_volume != *new_music_volume)
         {
             MLV_stop_music();
@@ -109,85 +110,99 @@ void init_menu(double *music_volume, double *effect_volume, double *new_music_vo
             *music_volume = *new_music_volume;
         }
         MLV_get_mouse_position(&mouse_x, &mouse_y);
-        if (main_menu_state) // Vérifier si le menu principal est actif
-        {
-            draw_button(button_x, button_y, button_width, button_height, "Play", font, mouse_x, mouse_y);
-            draw_button(button_x, button_y2, button_width, button_height, "Setting", font, mouse_x, mouse_y);
-            draw_button(button_x, button_y3, button_width, button_height, "Leave", font, mouse_x, mouse_y);
-            if (MLV_get_mouse_button_state(MLV_BUTTON_LEFT) == MLV_PRESSED &&
-                mouse_x >= button_x && mouse_x <= button_x + button_width &&
-                mouse_y >= button_y && mouse_y <= button_y + button_height)
-            {
-                main_menu_state = 0;
-                setting_menu_state = 0;
-                level_menu_state = 1;
-                MLV_wait_milliseconds(100);
-            }
-            if (MLV_get_mouse_button_state(MLV_BUTTON_LEFT) == MLV_PRESSED &&
-                mouse_x >= button_x && mouse_x <= button_x + button_width &&
-                mouse_y >= button_y2 && mouse_y <= button_y2 + button_height)
-            {
-                main_menu_state = 0;
-                setting_menu_state = 1;
-                level_menu_state = 0;
-                MLV_wait_milliseconds(100);
-            }
-            if (MLV_get_mouse_button_state(MLV_BUTTON_LEFT) == MLV_PRESSED &&
-                mouse_x >= button_x && mouse_x <= button_x + button_width &&
-                mouse_y >= button_y3 && mouse_y <= button_y3 + button_height)
-            {
-                return;
-            }
-        }
-        if (level_menu_state) // Vérifier si le menu des level est actif
-        {
-            draw_button(button_x, button_y, button_width, button_height, "Level 1", font, mouse_x, mouse_y);
-            draw_button(button_x, button_y2, button_width, button_height, "Level 2", font, mouse_x, mouse_y);
-            draw_button(button_x, button_y3, button_width, button_height, "Back", font, mouse_x, mouse_y);
 
-            if (MLV_get_mouse_button_state(MLV_BUTTON_LEFT) == MLV_PRESSED &&
-                mouse_x >= button_x && mouse_x <= button_x + button_width &&
-                mouse_y >= button_y && mouse_y <= button_y + button_height)
-            {
-                MLV_stop_music();
-                init_party(effect_volume, music_volume, 1);
-                MLV_play_music(music, *music_volume, -1);
-            }
-            if (MLV_get_mouse_button_state(MLV_BUTTON_LEFT) == MLV_PRESSED &&
-                mouse_x >= button_x && mouse_x <= button_x + button_width &&
-                mouse_y >= button_y2 && mouse_y <= button_y2 + button_height)
-            {
-                MLV_stop_music();
-                init_party(effect_volume, music_volume, 2);
-                MLV_play_music(music, *music_volume, -1);
-            }
-            if (MLV_get_mouse_button_state(MLV_BUTTON_LEFT) == MLV_PRESSED &&
-                mouse_x >= button_x && mouse_x <= button_x + button_width &&
-                mouse_y >= button_y3 && mouse_y <= button_y3 + button_height)
-            {
-                main_menu_state = 1;
-                setting_menu_state = 0;
-                level_menu_state = 0;
-                MLV_wait_milliseconds(100);
-            }
-        }
 
-        if (setting_menu_state) // Vérifier si le menu des paramètres est actif
+            if (main_menu_state && pressed == 0) // Vérifier si le menu principal est actif
+            {
+                draw_button(button_x, button_y, button_width, button_height, "Play", font, mouse_x, mouse_y);
+                draw_button(button_x, button_y2, button_width, button_height, "Setting", font, mouse_x, mouse_y);
+                draw_button(button_x, button_y3, button_width, button_height, "Leave", font, mouse_x, mouse_y);
+                if (MLV_get_mouse_button_state(MLV_BUTTON_LEFT) == MLV_PRESSED &&
+                    mouse_x >= button_x && mouse_x <= button_x + button_width &&
+                    mouse_y >= button_y && mouse_y <= button_y + button_height)
+                {
+                    main_menu_state = 0;
+                    setting_menu_state = 0;
+                    level_menu_state = 1;
+                    pressed = 1;
+                    printf("check : %d\n", pressed);
+                    // MLV_wait_milliseconds(100);
+                }
+                if (MLV_get_mouse_button_state(MLV_BUTTON_LEFT) == MLV_PRESSED &&
+                    mouse_x >= button_x && mouse_x <= button_x + button_width &&
+                    mouse_y >= button_y2 && mouse_y <= button_y2 + button_height)
+                {
+                    main_menu_state = 0;
+                    setting_menu_state = 1;
+                    level_menu_state = 0;
+                    pressed = 1;
+                    // MLV_wait_milliseconds(100);
+                }
+                if (MLV_get_mouse_button_state(MLV_BUTTON_LEFT) == MLV_PRESSED &&
+                    mouse_x >= button_x && mouse_x <= button_x + button_width &&
+                    mouse_y >= button_y3 && mouse_y <= button_y3 + button_height)
+                {
+                    return;
+                }
+            }
+            if (level_menu_state && pressed == 0) // Vérifier si le menu des level est actif
+            {
+                draw_button(button_x, button_y, button_width, button_height, "Level 1", font, mouse_x, mouse_y);
+                draw_button(button_x, button_y2, button_width, button_height, "Level 2", font, mouse_x, mouse_y);
+                draw_button(button_x, button_y3, button_width, button_height, "Back", font, mouse_x, mouse_y);
+
+                if (MLV_get_mouse_button_state(MLV_BUTTON_LEFT) == MLV_PRESSED &&
+                    mouse_x >= button_x && mouse_x <= button_x + button_width &&
+                    mouse_y >= button_y && mouse_y <= button_y + button_height)
+                {
+
+                    MLV_stop_music();
+                    init_party(effect_volume, music_volume, 1);
+                    MLV_play_music(music, *music_volume, -1);
+                    pressed = 1;
+                }
+                if (MLV_get_mouse_button_state(MLV_BUTTON_LEFT) == MLV_PRESSED &&
+                    mouse_x >= button_x && mouse_x <= button_x + button_width &&
+                    mouse_y >= button_y2 && mouse_y <= button_y2 + button_height)
+                {
+                    MLV_stop_music();
+                    init_party(effect_volume, music_volume, 2);
+                    MLV_play_music(music, *music_volume, -1);
+                    pressed = 1;
+                }
+                if (MLV_get_mouse_button_state(MLV_BUTTON_LEFT) == MLV_PRESSED &&
+                    mouse_x >= button_x && mouse_x <= button_x + button_width &&
+                    mouse_y >= button_y3 && mouse_y <= button_y3 + button_height)
+                {
+                    main_menu_state = 1;
+                    setting_menu_state = 0;
+                    level_menu_state = 0;
+                    pressed = 1;
+                    // MLV_wait_milliseconds(100);
+                }
+            }
+
+            if (setting_menu_state && pressed == 0) // Vérifier si le menu des paramètres est actif
+            {
+                draw_gauge(button_x, button_y, button_width, button_height, "Music Volume", font, font_title, mouse_x, mouse_y, new_music_volume);
+                draw_gauge(button_x, button_y2, button_width, button_height, "Effect Volume", font, font_title, mouse_x, mouse_y, effect_volume);
+                draw_button(button_x, button_y3, button_width, button_height, "Back", font, mouse_x, mouse_y);
+                if (MLV_get_mouse_button_state(MLV_BUTTON_LEFT) == MLV_PRESSED &&
+                    mouse_x >= button_x && mouse_x <= button_x + button_width &&
+                    mouse_y >= button_y3 && mouse_y <= button_y3 + button_height)
+                {
+                    main_menu_state = 1;
+                    setting_menu_state = 0;
+                    level_menu_state = 0;
+                    pressed = 1;
+                    // MLV_wait_milliseconds(100);
+                }
+            }
+        
+        if (MLV_get_mouse_button_state(MLV_BUTTON_LEFT) == MLV_RELEASED)
         {
-            draw_gauge(button_x, button_y, button_width, button_height, "Music Volume", font, font_title, mouse_x, mouse_y, new_music_volume);
-            draw_gauge(button_x, button_y2, button_width, button_height, "Effect Volume", font, font_title, mouse_x, mouse_y, effect_volume);
-            draw_button(button_x, button_y3, button_width, button_height, "Back", font, mouse_x, mouse_y);
-            if (MLV_get_mouse_button_state(MLV_BUTTON_LEFT) == MLV_PRESSED &&
-                mouse_x >= button_x && mouse_x <= button_x + button_width &&
-                mouse_y >= button_y3 && mouse_y <= button_y3 + button_height)
-            {
-                main_menu_state = 1;
-                setting_menu_state = 0;
-                level_menu_state = 0;
-                MLV_wait_milliseconds(100);
-            }
+            pressed = 0;
         }
-
 
         /* Get the time in nanoseconds at the frame ending */
         clock_gettime(CLOCK_REALTIME, &new);
