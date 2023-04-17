@@ -32,6 +32,8 @@ void update_player(Player* player){
     player->x += player->dx;
     player->y += player->dy;
 
+
+
     check_keyboard(player);
     check_player_collision_border(player);
 }

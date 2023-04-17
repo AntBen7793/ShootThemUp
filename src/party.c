@@ -11,6 +11,7 @@
 #include "../include/collision.h"
 #include "../include/level.h"
 #include "../include/party.h"
+#include "../include/bonus.h"
 
 void init_party(double* effect_volume, double* music_volume,int level)
 {
@@ -35,7 +36,7 @@ void init_party(double* effect_volume, double* music_volume,int level)
   MLV_resize_image(cloud, WIDTH, HEIGHT);
   MLV_resize_image(background, WIDTH, HEIGHT);
   Player player = init_player();
-
+  
   /* Music */
   MLV_init_audio();
   // MLV_Sound* rocket =  MLV_load_sound("soud/rocket.mp3");
@@ -50,7 +51,9 @@ void init_party(double* effect_volume, double* music_volume,int level)
   Missile_enemy *missiles_enemy = NULL;
   int nb_enemy = 0;
   Enemy *enemies = NULL;
-
+  int nb_bonus = 0;
+  Bonus *bonus_list = NULL;
+  
   // init_enemy(&enemies, &nb_enemy, 200, 10);
   init_level(&waves, &nb_wave, &current_wave, level);
 
@@ -60,6 +63,14 @@ void init_party(double* effect_volume, double* music_volume,int level)
     char filename[50];
     sprintf(filename, "./img/explosion_state%d.png", i);
     explosion_images[i] = MLV_load_image(filename);
+  }
+  
+  MLV_Image **heart_animation = malloc(7 * sizeof(MLV_Image *));
+  for (int i = 0; i < 7; i++)
+  {
+    char filename[50];
+    sprintf(filename, "./img/heart_state%d.png", i);
+    heart_animation[i] = MLV_load_image(filename);
   }
 
   while (!quit)
@@ -83,7 +94,7 @@ void init_party(double* effect_volume, double* music_volume,int level)
     update_player(&player);
     if (nb_enemy == 0)
     {
-      update_level(&waves, &nb_wave, &current_wave, &enemies, &nb_enemy, &quit);
+      update_level(&waves, &nb_wave, &current_wave, &enemies, &nb_enemy, &bonus_list, &nb_bonus, &quit);
     }
 
     if (event == MLV_KEY && key_sym == MLV_KEYBOARD_SPACE && state == MLV_PRESSED)
@@ -102,15 +113,15 @@ void init_party(double* effect_volume, double* music_volume,int level)
     MLV_draw_image(cloud, x, y2 - HEIGHT);
 
     draw_player(&player);
+    update_bonus(&bonus_list, nb_bonus, heart_animation);
     update_missile_enemy(&missiles_enemy, nb_missile_enemy);
     update_missile(&missiles, nb_missile);
     update_enemy(&enemies, &nb_enemy, explosion_images, &explosion, &missiles_enemy, &nb_missile_enemy, effect_volume);
+    check_collision_enemy(&player, &enemies, &nb_enemy, &quit, &hit, effect_volume);
     check_collision_enemy_missile(&enemies, &missiles, &nb_missile, &nb_enemy, &hit, effect_volume);
     check_collision_enemy_missile_player(&player, &missiles_enemy, &nb_missile_enemy, &quit, &hit, effect_volume);
+    check_collision_bonus_player(&player, &bonus_list, &nb_bonus, &hit, effect_volume);
     draw_health_bar(300, 750, 150, 10, player.life);
-
-    // printf("%d\n", player.life);
-
     /* We get there at most one keyboard event each frame */
     event = MLV_get_event(&key_sym, NULL, NULL, NULL, NULL,
                           NULL, NULL, NULL, &state);
@@ -138,6 +149,8 @@ void init_party(double* effect_volume, double* music_volume,int level)
     free(waves[i]);
   }
   free(waves);
+  free_animation_images(explosion_images, 6);
+  free_animation_images(heart_animation, 7);
   MLV_free_image(background);
   MLV_free_image(cloud);
   free(missiles);
@@ -149,4 +162,11 @@ void init_party(double* effect_volume, double* music_volume,int level)
   MLV_free_music(music);
 
   printf("fin\n");
+}
+
+void free_animation_images(MLV_Image **images, int nb) {
+    for (int i = 0; i < nb; i++) {
+        MLV_free_image(images[i]); // Libère l'image chargée avec MLV_load_image
+    }
+    free(images); // Libère le tableau d'images alloué avec malloc
 }

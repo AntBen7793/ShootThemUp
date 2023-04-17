@@ -40,10 +40,19 @@ typedef struct {
     int y;
     int width;
     int speed;
+    int type;
+    int animation_state;
+    MLV_Image * sprite;
+} Bonus;
+
+typedef struct {
+    int x;
+    int y;
+    int width;
+    int speed;
     int life;
     int type;
     int cooldown;
     int explosion_state;
     MLV_Image * sprite;
 } Enemy;
-

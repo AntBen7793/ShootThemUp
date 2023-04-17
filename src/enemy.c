@@ -15,66 +15,25 @@ void init_enemy(Enemy** enemies, int* nb_enemy, int x, int y, int type){
     enemy.life = 100;
     enemy.type = type;
     enemy.cooldown = 0;
-    if(type == 0){
-        enemy.sprite = MLV_load_image("./img/state1_enemy.png");
-    }
-    else if(type == 1){
-        enemy.sprite = MLV_load_image("./img/state1_enemy.png");
-    }
+    enemy.sprite = MLV_load_image("./img/state1_enemy.png");
+    
     
     MLV_resize_image(enemy.sprite, enemy.width, enemy.width);
     add_enemy(enemies, enemy, nb_enemy);
 }
 
-/*void update_enemy(Enemy** enemies, int* nb_enemy){
-    //check_player_collision_border(enemy);
-    //sleep(0.5);
-    for(int i = 0; i < *nb_enemy; i++){
-        (*enemies)[i].y = (*enemies)[i].y + (*enemies)[i].speed;          
-        draw_enemy(&((*enemies)[i]));
-        if((*enemies)[i].life <= 0){
-            //printf(" life => %d\n", (*enemies)[i].life);
-            (*enemies)[i].explosion_state++;
-            switch ((*enemies)[i].explosion_state)
-            {
-            case 0:
-                (*enemies)[i].sprite = MLV_load_image("./img/explosion_state0.png");
-                break;
-            case 1:
-                (*enemies)[i].sprite = MLV_load_image("./img/explosion_state1.png");
-                break;  
-            case 2:
-                (*enemies)[i].sprite = MLV_load_image("./img/explosion_state2.png");
-                break;
-            case 3:
-                (*enemies)[i].sprite = MLV_load_image("./img/explosion_state3.png");
-                break;
-            case 4:
-                (*enemies)[i].sprite = MLV_load_image("./img/explosion_state4.png");
-                break;
-            case 5:
-                (*enemies)[i].sprite = MLV_load_image("./img/explosion_state5.png");
-                break;
-            case 6:
-                (*enemies)[i].sprite = MLV_load_image("./img/explosion_state6.png");
-                break;
-            
-            default:
-                //(*enemies)[i].sprite = MLV_load_image("./img/explosion_state0.png");
-                break;
-            }
-            
-            if((*enemies)[i].explosion_state >=10){
-                remove_enemy(enemies, i, nb_enemy);
-            }
-        }
-    }   
-}*/
+int check_enemy_collision_border(Enemy* enemy){
+    if(enemy->y >= HEIGHT){
+        return 1;
+    }else{
+        return 0;
+    }
+}
 
 void update_enemy(Enemy** enemies, int* nb_enemy, MLV_Image** explosion_images,MLV_Sound** sound, Missile_enemy** missiles_enemy, int* nb_missile_enemy,double* effect_volume) {
     for (int i = 0; i < *nb_enemy; i++) {
         Enemy* enemy = &((*enemies)[i]);
-        //enemy->y += enemy->speed;
+
         movement_enemy(enemy);
         shoot_enemy(enemy, missiles_enemy, nb_missile_enemy);
         draw_enemy(enemy);
@@ -118,6 +77,7 @@ void shoot_enemy(Enemy* enemy,Missile_enemy** missiles_enemy, int* nb_missile_en
                 enemy->cooldown ++;
                 }
                  break;
+            
             default:
 
                 break;
@@ -132,6 +92,9 @@ void movement_enemy(Enemy* enemy){
                  break;
             case 1:
                  enemy->y += enemy->speed*2;
+                 break;
+            case 2:
+                 enemy->y += enemy->speed*10;
                  break;
             default:
 
@@ -174,3 +137,4 @@ void remove_enemy(Enemy** enemies, int index, int* nb_enemy) {
     }
     *enemies = temp;
 }
+

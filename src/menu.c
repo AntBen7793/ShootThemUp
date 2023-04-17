@@ -125,7 +125,6 @@ void init_menu(double *music_volume, double *effect_volume, double *new_music_vo
                     setting_menu_state = 0;
                     level_menu_state = 1;
                     pressed = 1;
-                    printf("check : %d\n", pressed);
                     // MLV_wait_milliseconds(100);
                 }
                 if (MLV_get_mouse_button_state(MLV_BUTTON_LEFT) == MLV_PRESSED &&
@@ -213,7 +212,7 @@ void init_menu(double *music_volume, double *effect_volume, double *new_music_vo
         /* We force here to wait if the frame was too short */
         if (accum < (1.0 / 48.0))
         {
-            MLV_wait_milliseconds((int)(((1.0 / 40.0) - accum) * 1000));
+            MLV_wait_milliseconds((int)(((1.0 / 30.0) - accum) * 1000));
         }
 
         MLV_actualise_window();

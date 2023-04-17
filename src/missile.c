@@ -19,7 +19,7 @@ void update_missile(Missile** missiles, int nb_missile){
    for(int i = 0; i < nb_missile; i++){
     
         (*missiles)[i].y = (*missiles)[i].y - (*missiles)[i].speed;
-    
+        
         
         draw_missile(&((*missiles)[i]));
     }    

@@ -7,4 +7,5 @@ void add_enemy(Enemy** enemies, Enemy enemy, int* nb_enemy);
 void remove_enemy(Enemy** enemies, int index, int* nb_enemy);
 void draw_enemy(Enemy* enemy);
 void movement_enemy(Enemy* enemy);
+int check_enemy_collision_border(Enemy* enemy);
 void shoot_enemy(Enemy* enemy,Missile_enemy** missiles_enemy, int* nb_missile_enemy);

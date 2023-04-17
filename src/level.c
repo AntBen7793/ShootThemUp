@@ -3,10 +3,11 @@
 #include "../include/struct.h"
 #include "../include/enemy.h"
 #include "../include/const.h"
+#include "../include/bonus.h"
 #include "../include/missile_enemy.h"
 
 
-void update_level(char*** waves, int* nb_wave, int* current_waves, Enemy** enemies , int* nb_enemy, int* quit){
+void update_level(char*** waves, int* nb_wave, int* current_waves, Enemy** enemies , int* nb_enemy,Bonus** bonus_list, int* nb_bonus, int* quit){
         int y = -ENEMY_W;
         
         int line_size;
@@ -15,13 +16,21 @@ void update_level(char*** waves, int* nb_wave, int* current_waves, Enemy** enemi
             int x = (WIDTH - line_size * ENEMY_W) / 2;
             for(int j = 0; j < line_size; j++){
                 //printf("%c", (*waves)[i][j]);
+                  //init_bonus(&bonus_list, &nb_bonus, 200, 200, 1);
                 if((*waves)[i][j] == 'X'){
                     init_enemy(enemies, nb_enemy, x ,y, 0);
                      x += ENEMY_W;
                 }else if ((*waves)[i][j] == '0'){
                      x += ENEMY_W;
+
+                }else if ((*waves)[i][j] == 'H'){
+                    init_bonus(bonus_list, nb_bonus, x+10, y+10, 1);
+                     x += ENEMY_W;
                 }else if ((*waves)[i][j] == 'V'){
                     init_enemy(enemies, nb_enemy, x ,y, 1);
+                     x += ENEMY_W;
+                }else if ((*waves)[i][j] == 'I'){
+                    init_enemy(enemies, nb_enemy, x ,y, 2);
                      x += ENEMY_W;
                 }else if ((*waves)[i][j] == 'F'){
                     *quit =1;
