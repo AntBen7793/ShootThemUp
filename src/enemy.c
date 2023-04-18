@@ -41,13 +41,15 @@ void update_enemy(Enemy** enemies, int* nb_enemy, MLV_Image** explosion_images,M
        
         if (enemy->life <= 0) {
             enemy->explosion_state++;
-            if (enemy->explosion_state < 6) {
-                enemy->sprite = explosion_images[enemy->explosion_state];
+
+            if (enemy->explosion_state < 18 && enemy->explosion_state%2 == 0) {
+                enemy->sprite = explosion_images[enemy->explosion_state -(enemy->explosion_state /2) ];
+                MLV_resize_image(enemy->sprite, enemy->width, enemy->width);
             }
             if(enemy->explosion_state == 1){
                 MLV_play_sound((*sound), *effect_volume);
             }
-            if(enemy->explosion_state >8){
+            if(enemy->explosion_state >20){
                 remove_enemy(enemies, i, nb_enemy);
                 i--;
             }

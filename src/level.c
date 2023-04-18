@@ -26,6 +26,12 @@ void update_level(char*** waves, int* nb_wave, int* current_waves, Enemy** enemi
                 }else if ((*waves)[i][j] == 'H'){
                     init_bonus(bonus_list, nb_bonus, x+10, y+10, 1);
                      x += ENEMY_W;
+                }else if ((*waves)[i][j] == 'S'){
+                    init_bonus(bonus_list, nb_bonus, x+10, y+10, 0);
+                     x += ENEMY_W;
+                }else if ((*waves)[i][j] == 'B'){
+                    init_bonus(bonus_list, nb_bonus, x+10, y+10, 2);
+                     x += ENEMY_W;
                 }else if ((*waves)[i][j] == 'V'){
                     init_enemy(enemies, nb_enemy, x ,y, 1);
                      x += ENEMY_W;

@@ -18,7 +18,11 @@ void init_bonus(Bonus **bonus_list, int *nb_bonus, int x, int y, int type)
     }
     else if (type == 1)
     {
-        bonus.sprite = MLV_load_image("./img/heart_state0.png");
+        bonus.sprite = MLV_load_image("./img/shield_state0.png");
+    }
+    else if (type == 2)
+    {
+        bonus.sprite = MLV_load_image("./img/bomb.png");
     }
 
     MLV_resize_image(bonus.sprite, bonus.width, bonus.width);
@@ -36,12 +40,13 @@ void add_bonus(Bonus **bonus_list, Bonus bonus, int *nb_bonus)
     (*bonus_list)[*nb_bonus] = bonus;
     *nb_bonus = (*nb_bonus) + 1;
 }
-void draw_bonus(Bonus* bonus){
+void draw_bonus(Bonus *bonus)
+{
 
-        MLV_draw_image((*bonus).sprite, (*bonus).x, (*bonus).y);
-        MLV_draw_rectangle((*bonus).x, (*bonus).y, (*bonus).width, (*bonus).width, MLV_COLOR_RED);
+    MLV_draw_image((*bonus).sprite, (*bonus).x, (*bonus).y);
+    MLV_draw_rectangle((*bonus).x, (*bonus).y, (*bonus).width, (*bonus).width, MLV_COLOR_RED);
 }
-void update_bonus(Bonus **bonus_list, int nb_bonus, MLV_Image **bonus_images)
+void update_bonus(Bonus **bonus_list, int nb_bonus, MLV_Image **heart_animation, MLV_Image **shield_animation)
 {
     for (int i = 0; i < nb_bonus; i++)
     {
@@ -52,64 +57,77 @@ void update_bonus(Bonus **bonus_list, int nb_bonus, MLV_Image **bonus_images)
 
         bonus->animation_state++;
 
-        if (bonus->animation_state < 7)
+        if (bonus->animation_state < 11 && bonus->animation_state > 4)
         {
-            bonus->sprite = bonus_images[bonus->animation_state];
+            if (bonus->type == 1)
+            {
+                bonus->sprite = heart_animation[bonus->animation_state - 4];
+            }
+            else if (bonus->type == 0)
+            {
+                bonus->sprite = shield_animation[bonus->animation_state - 4];
+            }
             MLV_resize_image(bonus->sprite, bonus->width, bonus->width);
         }
-        if (bonus->animation_state > 7)
+        if (bonus->animation_state > 11)
         {
             bonus->animation_state = 0;
-           
-            //i--;
         }
     }
 }
 
-void movement_bonus(Bonus* bonus){
-    //printf("test => %d\n", enemy->type);
+void movement_bonus(Bonus *bonus)
+{
+    // printf("test => %d\n", enemy->type);
     switch (bonus->type)
-            {
-            case 0:
-                 bonus->y += bonus->speed;
-                 break;
-            case 1:
-                 bonus->y += bonus->speed;
-                 break;
-            case 2:
-                 bonus->y += bonus->speed*10;
-                 break;
-            default:
+    {
+    case 0:
+        bonus->y += bonus->speed;
+        break;
+    case 1:
+        bonus->y += bonus->speed;
+        break;
+    case 2:
+        bonus->y += bonus->speed;
+        break;
+    default:
 
-                break;
-            }
+        break;
+    }
 }
 
-void remove_bonus(Bonus** bonus_list, int index, int* nb_bonus) {
-     
-    if (index < 0 || index >= *nb_bonus) {
+void remove_bonus(Bonus **bonus_list, int index, int *nb_bonus)
+{
+
+    if (index < 0 || index >= *nb_bonus)
+    {
         printf("Index out of bounds error...\n");
         return;
     }
 
-    for (int i = index; i < *nb_bonus - 1; i++) {
-        (*bonus_list)[i] = (*bonus_list)[i+1];
+    for (int i = index; i < *nb_bonus - 1; i++)
+    {
+        (*bonus_list)[i] = (*bonus_list)[i + 1];
     }
     (*nb_bonus)--;
-   
-    Bonus* temp = (Bonus*)realloc(*bonus_list, *nb_bonus * sizeof(Bonus));
-    if (temp == NULL && *nb_bonus > 0) {
+
+    Bonus *temp = (Bonus *)realloc(*bonus_list, *nb_bonus * sizeof(Bonus));
+    if (temp == NULL && *nb_bonus > 0)
+    {
         printf("Memory allocation error while removing missile.\n");
         return;
     }
     *bonus_list = temp;
 }
 
-int check_bonus_collision_border(Bonus* bonus){
-    if(bonus->y >= HEIGHT){
+int check_bonus_collision_border(Bonus *bonus)
+{
+    if (bonus->y >= HEIGHT)
+    {
         return 1;
-    }else{
+    }
+    else
+    {
         return 0;
     }
 }
-

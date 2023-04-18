@@ -9,10 +9,13 @@ typedef struct {
     int width;
     int speed;
     int life;
+    int shield;
+    int shot;
     MLV_Image * sprite;
     MLV_Image * sprite_left;
     MLV_Image * sprite_right;
     MLV_Image * sprite_forward;
+    MLV_Image * sprite_shield;
 } Player;
 
 typedef struct {
@@ -22,6 +25,7 @@ typedef struct {
     int height;
     int speed;
     int dmg;
+    int type;
     MLV_Image * sprite;
 } Missile;
 

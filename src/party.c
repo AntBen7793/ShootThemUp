@@ -43,6 +43,7 @@ void init_party(double* effect_volume, double* music_volume,int level)
   MLV_Music *music = MLV_load_music("sound/DangerZone.mp3");
   MLV_play_music(music, *music_volume, -1);
   MLV_Sound *hit = MLV_load_sound("sound/hit.wav");
+  MLV_Sound *take = MLV_load_sound("sound/bonus.ogg");
   MLV_Sound *explosion = MLV_load_sound("sound/explosion.ogg");
   MLV_Sound *rocket = MLV_load_sound("sound/rocket.ogg");
   int nb_missile = 0;
@@ -57,11 +58,11 @@ void init_party(double* effect_volume, double* music_volume,int level)
   // init_enemy(&enemies, &nb_enemy, 200, 10);
   init_level(&waves, &nb_wave, &current_wave, level);
 
-  MLV_Image **explosion_images = malloc(6 * sizeof(MLV_Image *));
-  for (int i = 0; i < 6; i++)
+  MLV_Image **explosion_images = malloc(9 * sizeof(MLV_Image *));
+  for (int i = 0; i < 9; i++)
   {
     char filename[50];
-    sprintf(filename, "./img/explosion_state%d.png", i);
+    sprintf(filename, "./img/explosion1/plane_state%d.png", i);
     explosion_images[i] = MLV_load_image(filename);
   }
   
@@ -71,6 +72,14 @@ void init_party(double* effect_volume, double* music_volume,int level)
     char filename[50];
     sprintf(filename, "./img/heart_state%d.png", i);
     heart_animation[i] = MLV_load_image(filename);
+  }
+
+  MLV_Image **shield_animation = malloc(8 * sizeof(MLV_Image *));
+  for (int i = 0; i < 8; i++)
+  {
+    char filename[50];
+    sprintf(filename, "./img/shield_state%d.png", i);
+    shield_animation[i] = MLV_load_image(filename);
   }
 
   while (!quit)
@@ -101,8 +110,17 @@ void init_party(double* effect_volume, double* music_volume,int level)
     {
       if (nb_missile < 4)
       {
-        init_missile(&missiles, &nb_missile, player.x + 10, player.y + 10);
-        init_missile(&missiles, &nb_missile, player.x + (player.width - 20), player.y + 10);
+        init_missile(&missiles, &nb_missile, player.x + 10, player.y + 10, 0);
+        init_missile(&missiles, &nb_missile, player.x + (player.width - 20), player.y + 10, 0);
+        MLV_play_sound(rocket, *effect_volume);
+      }
+    }
+    if (event == MLV_KEY && key_sym == MLV_KEYBOARD_b && state == MLV_PRESSED)
+    {
+      if (nb_missile < 4 && player.shot > 0)
+      {
+        init_missile(&missiles, &nb_missile, player.x + 30, player.y + 10, 1);
+        player.shot--;
         MLV_play_sound(rocket, *effect_volume);
       }
     }
@@ -113,19 +131,19 @@ void init_party(double* effect_volume, double* music_volume,int level)
     MLV_draw_image(cloud, x, y2 - HEIGHT);
 
     draw_player(&player);
-    update_bonus(&bonus_list, nb_bonus, heart_animation);
+    update_bonus(&bonus_list, nb_bonus, heart_animation, shield_animation);
     update_missile_enemy(&missiles_enemy, nb_missile_enemy);
     update_missile(&missiles, nb_missile);
     update_enemy(&enemies, &nb_enemy, explosion_images, &explosion, &missiles_enemy, &nb_missile_enemy, effect_volume);
     check_collision_enemy(&player, &enemies, &nb_enemy, &quit, &hit, effect_volume);
     check_collision_enemy_missile(&enemies, &missiles, &nb_missile, &nb_enemy, &hit, effect_volume);
     check_collision_enemy_missile_player(&player, &missiles_enemy, &nb_missile_enemy, &quit, &hit, effect_volume);
-    check_collision_bonus_player(&player, &bonus_list, &nb_bonus, &hit, effect_volume);
+    check_collision_bonus_player(&player, &bonus_list, &nb_bonus, &take, effect_volume);
     draw_health_bar(300, 750, 150, 10, player.life);
     /* We get there at most one keyboard event each frame */
     event = MLV_get_event(&key_sym, NULL, NULL, NULL, NULL,
                           NULL, NULL, NULL, &state);
-
+    //printf("shield : %d\n", player.shield);
     /* Event resolution here... */
     /* Moves of the entities on the board */
     /* Collision resolutions */

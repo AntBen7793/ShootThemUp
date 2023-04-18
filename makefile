@@ -57,4 +57,5 @@ clean:
 	rm -f *.o
 	rm -f *~
 	rm -f projet
+#	rm -f docs/
 #	rm -f projet.exe

@@ -1,3 +1,13 @@
+/**
+ * @file collision.c
+ * @author your name (you@domain.com)
+ * @brief
+ * @version 0.1
+ * @date 2023-04-17
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
 #include "../include/const.h"
 #include <stdio.h>
 #include <MLV/MLV_all.h>
@@ -8,6 +18,19 @@
 #include "../include/player.h"
 #include "../include/bonus.h"
 
+/**
+ * @brief check_collision
+ *
+ * @param x
+ * @param y
+ * @param width
+ * @param height
+ * @param x2
+ * @param y2
+ * @param width2
+ * @param height2
+ * @return int
+ */
 int check_collision(int x, int y, int width, int height, int x2, int y2, int width2, int height2)
 {
     if (x < x2 + width2 &&
@@ -38,7 +61,10 @@ void check_collision_enemy_missile(Enemy **enemies, Missile **missiles, int *nb_
                 MLV_play_sound((*sound), *effect_volume);
                 (*enemies)[j].life = (*enemies)[j].life - (*missiles)[i].dmg;
                 // remove_enemy(enemies, j, nb_enemy);
-                remove_missile(missiles, i, nb_missile);
+                if ((*missiles)[i].type != 1)
+                {
+                    remove_missile(missiles, i, nb_missile);
+                }
 
                 // printf("life => %d\n", (*enemies)[j].life);
 
@@ -60,7 +86,14 @@ void check_collision_enemy_missile_player(Player *player, Missile_enemy **missil
         if (check_collision((*missiles_enemy)[i].x, (*missiles_enemy)[i].y, (*missiles_enemy)[i].width, (*missiles_enemy)[i].height, (*player).x, (*player).y, (*player).width, (*player).width) == 1)
         {
             MLV_play_sound((*sound), *effect_volume);
-            (*player).life = (*player).life - (*missiles_enemy)[i].dmg;
+            if (player->shield > 0)
+            {
+                (*player).shield = (*player).shield - 1;
+            }
+            else
+            {
+                (*player).life = (*player).life - (*missiles_enemy)[i].dmg;
+            }
             if ((*player).life < 0)
                 (*player).life = 0;
             remove_missile_enemy(missiles_enemy, i, nb_missile_enemy);
@@ -86,14 +119,17 @@ void check_collision_bonus_player(Player *player, Bonus **bonus_list, int *nb_bo
         }
         if (check_collision((*bonus_list)[i].x, (*bonus_list)[i].y, (*bonus_list)[i].width, (*bonus_list)[i].width, (*player).x, (*player).y, (*player).width, (*player).width) == 1)
         {
-            // MLV_play_sound((*sound), *effect_volume);
+            MLV_play_sound((*sound), *effect_volume);
             switch ((*bonus_list)[i].type)
             {
             case 0:
-                (*player).life += 30;
+                (*player).shield += 1;
                 break;
             case 1:
-                (*player).life += 33;
+                (*player).life += 30;
+                break;
+            case 2:
+                (*player).shot += 1;
                 break;
 
             default:
