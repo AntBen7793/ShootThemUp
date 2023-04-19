@@ -29,10 +29,18 @@ void init_party(double* effect_volume, double* music_volume,int level)
   char **waves = NULL;
   int nb_wave = 0;
   int current_wave = 0;
-  MLV_Image *background;
-  MLV_Image *cloud;
-  background = MLV_load_image("./img/sea_.png");
-  cloud = MLV_load_image("./img/cloud.png");
+  MLV_Image *background = MLV_load_image("./img/sea_.png");
+  MLV_Image *cloud = MLV_load_image("./img/cloud.png");
+  MLV_Image *hud = MLV_load_image("./img/hud.png");
+  MLV_Image *shield = MLV_load_image("./img/shield_icon.png");
+  MLV_Image *fireball = MLV_load_image("./img/fireball_icon.png");
+  MLV_Image *filtre = MLV_load_image("./img/filtre.png");
+  MLV_Font *font_hud = MLV_load_font("./font/ARCADECLASSIC.ttf", 40);
+  //MLV_Image *super_shot = MLV_load_image("./img/shield_icon.png");
+  MLV_resize_image(shield, 65, 65);
+  MLV_resize_image(fireball, 50, 50);
+  MLV_resize_image(filtre, 150, 60);
+  
   MLV_resize_image(cloud, WIDTH, HEIGHT);
   MLV_resize_image(background, WIDTH, HEIGHT);
   Player player = init_player();
@@ -57,7 +65,7 @@ void init_party(double* effect_volume, double* music_volume,int level)
   
   // init_enemy(&enemies, &nb_enemy, 200, 10);
   init_level(&waves, &nb_wave, &current_wave, level);
-
+  printf("test\n");
   MLV_Image **explosion_images = malloc(9 * sizeof(MLV_Image *));
   for (int i = 0; i < 9; i++)
   {
@@ -70,18 +78,26 @@ void init_party(double* effect_volume, double* music_volume,int level)
   for (int i = 0; i < 7; i++)
   {
     char filename[50];
-    sprintf(filename, "./img/heart_state%d.png", i);
+    sprintf(filename, "./img/animation/heart/heart_state%d.png", i);
     heart_animation[i] = MLV_load_image(filename);
   }
 
-  MLV_Image **shield_animation = malloc(8 * sizeof(MLV_Image *));
-  for (int i = 0; i < 8; i++)
+  MLV_Image **shield_animation = malloc(7 * sizeof(MLV_Image *));
+  for (int i = 0; i < 7; i++)
   {
     char filename[50];
-    sprintf(filename, "./img/shield_state%d.png", i);
+    sprintf(filename, "./img/animation/shield/shield_state%d.png", i);
     shield_animation[i] = MLV_load_image(filename);
   }
 
+  MLV_Image **fireball_animation = malloc(7 * sizeof(MLV_Image *));
+  for (int i = 0; i < 7; i++)
+  {
+    char filename[50];
+    sprintf(filename, "./img/animation/fireball/fireball_state%d.png", i);
+    fireball_animation[i] = MLV_load_image(filename);
+  }
+  
   while (!quit)
   {
     /* Get the time in nanoseconds at the frame beginning */
@@ -131,7 +147,7 @@ void init_party(double* effect_volume, double* music_volume,int level)
     MLV_draw_image(cloud, x, y2 - HEIGHT);
 
     draw_player(&player);
-    update_bonus(&bonus_list, nb_bonus, heart_animation, shield_animation);
+    update_bonus(&bonus_list, nb_bonus, heart_animation, shield_animation, fireball_animation);
     update_missile_enemy(&missiles_enemy, nb_missile_enemy);
     update_missile(&missiles, nb_missile);
     update_enemy(&enemies, &nb_enemy, explosion_images, &explosion, &missiles_enemy, &nb_missile_enemy, effect_volume);
@@ -139,7 +155,7 @@ void init_party(double* effect_volume, double* music_volume,int level)
     check_collision_enemy_missile(&enemies, &missiles, &nb_missile, &nb_enemy, &hit, effect_volume);
     check_collision_enemy_missile_player(&player, &missiles_enemy, &nb_missile_enemy, &quit, &hit, effect_volume);
     check_collision_bonus_player(&player, &bonus_list, &nb_bonus, &take, effect_volume);
-    draw_health_bar(300, 750, 150, 10, player.life);
+    draw_health_bar(WIDTH-200, HEIGHT-100, 200, 20,&player, hud, shield, fireball, font_hud, filtre);
     /* We get there at most one keyboard event each frame */
     event = MLV_get_event(&key_sym, NULL, NULL, NULL, NULL,
                           NULL, NULL, NULL, &state);

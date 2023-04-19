@@ -12,17 +12,20 @@ void init_bonus(Bonus **bonus_list, int *nb_bonus, int x, int y, int type)
     bonus.width = 50;
     bonus.speed = 1;
     bonus.animation_state = 0;
-    if (type == 0)
+    switch (type)
     {
-        bonus.sprite = MLV_load_image("./img/heart_state0.png");
-    }
-    else if (type == 1)
-    {
-        bonus.sprite = MLV_load_image("./img/shield_state0.png");
-    }
-    else if (type == 2)
-    {
-        bonus.sprite = MLV_load_image("./img/bomb.png");
+    case 0:
+        bonus.sprite = MLV_load_image("./img/shield_icon.png");       
+        break;
+    case 1:
+        bonus.sprite = MLV_load_image("./img/heart_icon.png");
+        break;
+    case 2:
+        bonus.sprite = MLV_load_image("./img/fireball_icon.png");
+        break;
+    
+    default:
+        break;
     }
 
     MLV_resize_image(bonus.sprite, bonus.width, bonus.width);
@@ -46,7 +49,7 @@ void draw_bonus(Bonus *bonus)
     MLV_draw_image((*bonus).sprite, (*bonus).x, (*bonus).y);
     MLV_draw_rectangle((*bonus).x, (*bonus).y, (*bonus).width, (*bonus).width, MLV_COLOR_RED);
 }
-void update_bonus(Bonus **bonus_list, int nb_bonus, MLV_Image **heart_animation, MLV_Image **shield_animation)
+void update_bonus(Bonus **bonus_list, int nb_bonus, MLV_Image **heart_animation, MLV_Image **shield_animation, MLV_Image **fireball_animation)
 {
     for (int i = 0; i < nb_bonus; i++)
     {
@@ -56,23 +59,33 @@ void update_bonus(Bonus **bonus_list, int nb_bonus, MLV_Image **heart_animation,
         draw_bonus(bonus);
 
         bonus->animation_state++;
-
+        
         if (bonus->animation_state < 11 && bonus->animation_state > 4)
         {
-            if (bonus->type == 1)
+
+            switch (bonus->type)
             {
+            case 0:
+                bonus->sprite = shield_animation[bonus->animation_state - 4];                  
+                break;
+            case 1:
                 bonus->sprite = heart_animation[bonus->animation_state - 4];
+               
+                break;
+            case 2:
+                bonus->sprite = fireball_animation[bonus->animation_state - 4];
+                break;
+            
+            default:
+                break;
             }
-            else if (bonus->type == 0)
-            {
-                bonus->sprite = shield_animation[bonus->animation_state - 4];
-            }
+            
+           
             MLV_resize_image(bonus->sprite, bonus->width, bonus->width);
         }
-        if (bonus->animation_state > 11)
-        {
-            bonus->animation_state = 0;
-        }
+
+        if (bonus->animation_state > 11){bonus->animation_state = 0;}
+        
     }
 }
 
