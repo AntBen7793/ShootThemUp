@@ -15,7 +15,7 @@ void init_missile(Missile **missiles, int *nb_missile, int x, int y, int type)
         missile.dmg = 50;
         missile.width = 10;
         missile.height = 30;
-        missile.sprite = MLV_load_image("./img/bullet.png");
+        missile.sprite = MLV_load_image("./img/rocket.png");
     }
     else
     {
