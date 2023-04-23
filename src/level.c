@@ -38,6 +38,9 @@ void update_level(char*** waves, int* nb_wave, int* current_waves, Enemy** enemi
                 }else if ((*waves)[i][j] == 'I'){
                     init_enemy(enemies, nb_enemy, x ,y, 2);
                      x += ENEMY_W;
+                }else if ((*waves)[i][j] == 'Z'){
+                    init_enemy(enemies, nb_enemy, x ,y, 3);
+                     x += ENEMY_W;
                 }else if ((*waves)[i][j] == 'F'){
                     *quit =1;
                     return;
