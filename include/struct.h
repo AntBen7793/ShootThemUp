@@ -10,6 +10,7 @@ typedef struct {
     int speed;
     int life;
     int shield;
+    int nuke;
     int shot;
     MLV_Image * sprite;
     MLV_Image * sprite_left;
@@ -34,6 +35,17 @@ typedef struct {
     int y;
     int width;
     int height;
+    int dmg;
+    int is_use;
+    int state;
+    int fire;
+} Nuke;
+
+typedef struct {
+    int x;
+    int y;
+    int width;
+    int height;
     int speed;
     int dmg;
     MLV_Image * sprite;
@@ -50,13 +62,13 @@ typedef struct {
 } Bonus;
 
 typedef struct {
-    int center;
     int x;
     int y;
     int width;
     int speed;
     int life;
     int type;
+    int center;
     int cooldown;
     int explosion_state;
     MLV_Image * sprite;

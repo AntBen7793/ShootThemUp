@@ -15,7 +15,7 @@ void init_bonus(Bonus **bonus_list, int *nb_bonus, int x, int y, int type)
     switch (type)
     {
     case 0:
-        bonus.sprite = MLV_load_image("./img/shield_icon.png");       
+        bonus.sprite = MLV_load_image("./img/shield_icon.png");
         break;
     case 1:
         bonus.sprite = MLV_load_image("./img/heart_icon.png");
@@ -23,8 +23,11 @@ void init_bonus(Bonus **bonus_list, int *nb_bonus, int x, int y, int type)
     case 2:
         bonus.sprite = MLV_load_image("./img/fireball_icon.png");
         break;
-    
+    case 3:
+        bonus.sprite = MLV_load_image("./img/nuke_icon.png");
+        break;
     default:
+
         break;
     }
 
@@ -59,33 +62,33 @@ void update_bonus(Bonus **bonus_list, int nb_bonus, MLV_Image **heart_animation,
         draw_bonus(bonus);
 
         bonus->animation_state++;
-        
+
         if (bonus->animation_state < 11 && bonus->animation_state > 4)
         {
 
             switch (bonus->type)
             {
             case 0:
-                bonus->sprite = shield_animation[bonus->animation_state - 4];                  
+                bonus->sprite = shield_animation[bonus->animation_state - 4];
                 break;
             case 1:
                 bonus->sprite = heart_animation[bonus->animation_state - 4];
-               
                 break;
             case 2:
                 bonus->sprite = fireball_animation[bonus->animation_state - 4];
                 break;
-            
+
             default:
                 break;
             }
-            
-           
+
             MLV_resize_image(bonus->sprite, bonus->width, bonus->width);
         }
 
-        if (bonus->animation_state > 11){bonus->animation_state = 0;}
-        
+        if (bonus->animation_state > 11)
+        {
+            bonus->animation_state = 0;
+        }
     }
 }
 
@@ -104,7 +107,7 @@ void movement_bonus(Bonus *bonus)
         bonus->y += bonus->speed;
         break;
     default:
-
+        bonus->y += bonus->speed;
         break;
     }
 }
@@ -131,6 +134,33 @@ void remove_bonus(Bonus **bonus_list, int index, int *nb_bonus)
         return;
     }
     *bonus_list = temp;
+}
+
+void use_bonus(Bonus *bonus, Player *player)
+{
+
+    switch (bonus->type)
+    {
+    case 0:
+        (*player).shield += 1;
+        break;
+    case 1:
+        (*player).life += 30;
+        break;
+    case 2:
+        (*player).shot += 1;
+        break;
+    case 3:
+        (*player).nuke += 1;
+        break;
+
+    default:
+
+        break;
+    }
+
+    if ((*player).life > 100)
+        (*player).life = 100;
 }
 
 int check_bonus_collision_border(Bonus *bonus)

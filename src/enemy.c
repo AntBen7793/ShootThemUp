@@ -171,3 +171,4 @@ void remove_enemy(Enemy** enemies, int index, int* nb_enemy) {
     *enemies = temp;
 }
 
+

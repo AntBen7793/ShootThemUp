@@ -120,25 +120,7 @@ void check_collision_bonus_player(Player *player, Bonus **bonus_list, int *nb_bo
         if (check_collision((*bonus_list)[i].x, (*bonus_list)[i].y, (*bonus_list)[i].width, (*bonus_list)[i].width, (*player).x, (*player).y, (*player).width, (*player).width) == 1)
         {
             MLV_play_sound((*sound), *effect_volume);
-            switch ((*bonus_list)[i].type)
-            {
-            case 0:
-                (*player).shield += 1;
-                break;
-            case 1:
-                (*player).life += 30;
-                break;
-            case 2:
-                (*player).shot += 1;
-                break;
-
-            default:
-
-                break;
-            }
-
-            if ((*player).life > 100)
-                (*player).life = 100;
+            use_bonus(&(*bonus_list)[i], player);
             remove_bonus(bonus_list, i, nb_bonus);
         }
     }
@@ -161,5 +143,18 @@ void check_collision_enemy(Player *player, Enemy **enemies, int *nb_enemy, int *
         printf("GAME OVER");
         //(*player).life = 100;
         (*quit) = 1;
+    }
+}
+
+void check_collision_nuke_enemy(Nuke* nuke,Enemy **enemies, int *nb_enemy, MLV_Sound **sound, double *effect_volume)
+{
+
+    for (int i = 0; i < *nb_enemy; i++)
+    {
+        if (check_collision((*enemies)[i].x, (*enemies)[i].y, (*enemies)[i].width, (*enemies)[i].width, (*nuke).x, (*nuke).y, (*nuke).width, (*nuke).height) == 1)
+        {
+           (*enemies)[i].life = (*enemies)[i].life - (*nuke).dmg;
+           
+        }
     }
 }

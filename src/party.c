@@ -12,8 +12,9 @@
 #include "../include/level.h"
 #include "../include/party.h"
 #include "../include/bonus.h"
+#include "../include/nuke.h"
 
-void init_party(double* effect_volume, double* music_volume,int level)
+void init_party(double *effect_volume, double *music_volume, int level)
 {
   printf("Le début de quelque chose de grand\n");
 
@@ -34,17 +35,20 @@ void init_party(double* effect_volume, double* music_volume,int level)
   MLV_Image *hud = MLV_load_image("./img/hud.png");
   MLV_Image *shield = MLV_load_image("./img/shield_icon.png");
   MLV_Image *fireball = MLV_load_image("./img/fireball_icon.png");
+  MLV_Image *nuke = MLV_load_image("./img/nuke_icon.png");
   MLV_Image *filtre = MLV_load_image("./img/filtre.png");
   MLV_Font *font_hud = MLV_load_font("./font/ARCADECLASSIC.ttf", 40);
-  //MLV_Image *super_shot = MLV_load_image("./img/shield_icon.png");
-  MLV_resize_image(shield, 65, 65);
+  // MLV_Image *super_shot = MLV_load_image("./img/shield_icon.png");
+  MLV_resize_image(shield, 60, 60);
   MLV_resize_image(fireball, 50, 50);
-  MLV_resize_image(filtre, 150, 60);
-  
+  MLV_resize_image(nuke, 50, 50);
+  MLV_resize_image(filtre, 160, 60);
+  MLV_resize_image(hud, 210, 100);
+
   MLV_resize_image(cloud, WIDTH, HEIGHT);
   MLV_resize_image(background, WIDTH, HEIGHT);
   Player player = init_player();
-  
+
   /* Music */
   MLV_init_audio();
   // MLV_Sound* rocket =  MLV_load_sound("soud/rocket.mp3");
@@ -62,7 +66,7 @@ void init_party(double* effect_volume, double* music_volume,int level)
   Enemy *enemies = NULL;
   int nb_bonus = 0;
   Bonus *bonus_list = NULL;
-  
+  Nuke nuke_obj = init_nuke(0, 100);
   // init_enemy(&enemies, &nb_enemy, 200, 10);
   init_level(&waves, &nb_wave, &current_wave, level);
   printf("test\n");
@@ -73,7 +77,7 @@ void init_party(double* effect_volume, double* music_volume,int level)
     sprintf(filename, "./img/explosion1/plane_state%d.png", i);
     explosion_images[i] = MLV_load_image(filename);
   }
-  
+
   MLV_Image **heart_animation = malloc(7 * sizeof(MLV_Image *));
   for (int i = 0; i < 7; i++)
   {
@@ -97,7 +101,7 @@ void init_party(double* effect_volume, double* music_volume,int level)
     sprintf(filename, "./img/animation/fireball/fireball_state%d.png", i);
     fireball_animation[i] = MLV_load_image(filename);
   }
-  
+
   while (!quit)
   {
     /* Get the time in nanoseconds at the frame beginning */
@@ -140,6 +144,19 @@ void init_party(double* effect_volume, double* music_volume,int level)
         MLV_play_sound(rocket, *effect_volume);
       }
     }
+    
+    if (event == MLV_KEY && key_sym == MLV_KEYBOARD_n && state == MLV_PRESSED && player.nuke > 0 && nuke_obj.state == 0)
+    {
+
+     
+      // check_collision_nuke_enemy(&nuke_obj, &enemies, &nb_enemy, &hit, effect_volume);
+      player.nuke --;
+      nuke_obj.is_use = 1;
+      nuke_obj.fire = 1;
+      
+      
+      // MLV_play_sound(rocket, *effect_volume);
+    }
 
     MLV_draw_image(background, x, y);
     MLV_draw_image(background, x, y - HEIGHT);
@@ -155,11 +172,29 @@ void init_party(double* effect_volume, double* music_volume,int level)
     check_collision_enemy_missile(&enemies, &missiles, &nb_missile, &nb_enemy, &hit, effect_volume);
     check_collision_enemy_missile_player(&player, &missiles_enemy, &nb_missile_enemy, &quit, &hit, effect_volume);
     check_collision_bonus_player(&player, &bonus_list, &nb_bonus, &take, effect_volume);
-    draw_health_bar(WIDTH-200, HEIGHT-100, 200, 20,&player, hud, shield, fireball, font_hud, filtre);
+    
+    if (nuke_obj.is_use == 1)
+    {
+
+      update_nuke(&nuke_obj);
+      
+      if (event == MLV_KEY && key_sym == MLV_KEYBOARD_n && state == MLV_PRESSED && nuke_obj.state == 1)
+      {
+        
+        
+        check_collision_nuke_enemy(&nuke_obj, &enemies, &nb_enemy, &hit, effect_volume);
+
+        nuke_obj.fire =0;
+        nuke_obj.state =0;
+        nuke_obj.is_use =0;
+      }
+      if(nuke_obj.state == 0 && nuke_obj.fire == 1)nuke_obj.state = 1;
+    }
+    draw_health_bar(WIDTH - 200, HEIGHT - 100, 200, 20, &player, hud, shield, fireball, nuke, font_hud, filtre);
     /* We get there at most one keyboard event each frame */
     event = MLV_get_event(&key_sym, NULL, NULL, NULL, NULL,
                           NULL, NULL, NULL, &state);
-    //printf("shield : %d\n", player.shield);
+    // printf("shield : %d\n", player.shield);
     /* Event resolution here... */
     /* Moves of the entities on the board */
     /* Collision resolutions */
@@ -198,9 +233,11 @@ void init_party(double* effect_volume, double* music_volume,int level)
   printf("fin\n");
 }
 
-void free_animation_images(MLV_Image **images, int nb) {
-    for (int i = 0; i < nb; i++) {
-        MLV_free_image(images[i]); // Libère l'image chargée avec MLV_load_image
-    }
-    free(images); // Libère le tableau d'images alloué avec malloc
+void free_animation_images(MLV_Image **images, int nb)
+{
+  for (int i = 0; i < nb; i++)
+  {
+    MLV_free_image(images[i]); // Libère l'image chargée avec MLV_load_image
+  }
+  free(images); // Libère le tableau d'images alloué avec malloc
 }

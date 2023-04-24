@@ -2,7 +2,7 @@ CC=gcc
 WIN=x86_64-w64-mingw32-gcc
 CFLAGS=-Wall -std=c17 -pthread #-I/usr/include/MLV -L/usr/lib # Ajouter l'option d'inclusion ici
 LDFLAGS=-lm -lMLV  # Ajouter l'option de bibliothèque ici
-OBJ=main.o player.o collision.o enemy.o missile.o level.o missile_enemy.o health_bar.o party.o menu.o bonus.o
+OBJ=main.o player.o collision.o enemy.o missile.o level.o missile_enemy.o health_bar.o party.o menu.o bonus.o nuke.o
 SRC=src/
 
 projet: $(OBJ)
@@ -51,6 +51,10 @@ menu.o: ${SRC}menu.c
 
 bonus.o: ${SRC}bonus.c
 	$(CC) -c ${SRC}bonus.c $(CFLAGS)
+#	$(WIN) -c ${SRC}menu.c $(CFLAGS)
+
+nuke.o: ${SRC}nuke.c
+	$(CC) -c ${SRC}nuke.c $(CFLAGS)
 #	$(WIN) -c ${SRC}menu.c $(CFLAGS)
 
 clean: 
