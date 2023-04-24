@@ -50,6 +50,7 @@ typedef struct {
 } Bonus;
 
 typedef struct {
+    int center;
     int x;
     int y;
     int width;

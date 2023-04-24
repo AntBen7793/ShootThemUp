@@ -1,12 +1,15 @@
 #include <MLV/MLV_all.h>
+#include <math.h>
 #include "../include/struct.h"
 #include "../include/const.h"
 #include "../include/enemy.h"
 #include "../include/missile_enemy.h"
 
+#define PI 3.14159
 
 void init_enemy(Enemy** enemies, int* nb_enemy, int x, int y, int type){
     Enemy enemy;
+    enemy.center=x;
     enemy.x = x;
     enemy.width = 70;
     enemy.y = y;
@@ -110,12 +113,7 @@ void movement_enemy(Enemy* enemy){
                  break;
             case 3:
                  enemy->y += enemy->speed*2;
-                 if(enemy->cooldown <=23 ){
-                    enemy->x += enemy->speed*2;
-                 }
-                 else{
-                    enemy->x -= enemy->speed*2;
-                 }
+                 enemy->x = enemy->center +  WIDTH/14 * sin(2*PI*enemy->y/800*5);
                  break;
             default:
 
