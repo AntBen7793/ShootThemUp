@@ -83,7 +83,17 @@ void shoot_enemy(Enemy* enemy,Missile_enemy** missiles_enemy, int* nb_missile_en
                 }
                  break;
             case 3:
-                if(enemy->cooldown >= 45){
+                if(enemy->cooldown >= 55){
+                //init_missile_enemy(missiles_enemy, nb_missile_enemy, (enemy->x)+(enemy->width/2), enemy->y);
+                init_missile_enemy(missiles_enemy, nb_missile_enemy, (enemy->x)+10, enemy->y);
+                init_missile_enemy(missiles_enemy, nb_missile_enemy, (enemy->x)+ ((enemy->width) - 20), enemy->y);
+                enemy->cooldown = 0;
+                }else{
+                enemy->cooldown ++;
+                }
+                 break;
+            case 4:
+                if(enemy->cooldown >= 55){
                 //init_missile_enemy(missiles_enemy, nb_missile_enemy, (enemy->x)+(enemy->width/2), enemy->y);
                 init_missile_enemy(missiles_enemy, nb_missile_enemy, (enemy->x)+10, enemy->y);
                 init_missile_enemy(missiles_enemy, nb_missile_enemy, (enemy->x)+ ((enemy->width) - 20), enemy->y);
@@ -113,7 +123,11 @@ void movement_enemy(Enemy* enemy){
                  break;
             case 3:
                  enemy->y += enemy->speed*2;
-                 enemy->x = enemy->center +  WIDTH/14 * sin(2*PI*enemy->y/800*5);
+                 enemy->x = enemy->center -  WIDTH/14 * sin(2*PI*enemy->y/HEIGHT*5);
+                 break;
+            case 4:
+                 enemy->y += enemy->speed*2;
+                 enemy->x = enemy->center +  WIDTH/14 * sin(2*PI*enemy->y/HEIGHT*5);
                  break;
             default:
 
