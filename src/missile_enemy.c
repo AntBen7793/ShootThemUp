@@ -14,7 +14,7 @@ void init_missile_enemy(Missile_enemy** missiles_enemy, int* nb_missile_enemy, i
     missile_enemy.height = 30;
     missile_enemy.speed = 10;
     missile_enemy.dmg = 34;
-    missile_enemy.sprite = MLV_load_image("./img/bullet.png");
+    missile_enemy.sprite = MLV_load_image("./img/rocket.png");
     add_missile_enemy(missiles_enemy, missile_enemy, nb_missile_enemy);
 }
 
