@@ -152,12 +152,7 @@ void init_party(double *effect_volume, double *music_volume, int level)
     if (quit)
     {
 
-      
-      stats.nb_life = player.life;
-      stats.nb_bonus = player.nuke+player.shield+player.shot;
-      
-     
-      init_end(&win, font_end, font_hud,300, &stats);
+      init_end(&win, font_end, font_hud,300, &stats, &player);
       finish=1;
     }
     else

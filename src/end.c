@@ -24,12 +24,14 @@ void display_info(int x, int y, char *text, int value, MLV_Font *font_hud)
     MLV_draw_text_with_font(x + 370, y, text_value, font_hud, MLV_COLOR_WHITE);
 }
 
-void init_end(int *win, MLV_Font *font_end, MLV_Font *font_hud, int width, Stats *stats)
+void init_end(int *win, MLV_Font *font_end, MLV_Font *font_hud, int width, Stats *stats, Player * player)
 {
     struct timespec last, new;
     double accum;
     int leave = 0;
     stats->time = (MLV_get_time() - stats->start_time) / 1000;
+    stats->nb_life = player->life;
+    stats->nb_bonus = player->nuke+player->shield+player->shot;
     int mouse_x, mouse_y;
     MLV_Image *background = MLV_load_image("./img/sea_.png");
     MLV_Image *cloud = MLV_load_image("./img/cloud.png");
