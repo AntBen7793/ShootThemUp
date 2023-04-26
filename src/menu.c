@@ -85,7 +85,7 @@ void init_menu(double *music_volume, double *effect_volume, double *new_music_vo
         /* Display of the current frame */
         /* THIS FUNCTION CALL A SINGLE TIME MLV_actualize_window */
         // draw_window(&param, &grid);
-        MLV_clear_window(MLV_COLOR_SKY_BLUE);
+   
 
         y = y + 3;
         y2 = y2 + 1;

@@ -33,7 +33,7 @@ int check_enemy_collision_border(Enemy* enemy){
     }
 }
 
-void update_enemy(Enemy** enemies, int* nb_enemy, MLV_Image** explosion_images,MLV_Sound** sound, Missile_enemy** missiles_enemy, int* enemy_killed, int* nb_missile_enemy,double* effect_volume) {
+void update_enemy(Enemy** enemies, int* nb_enemy, MLV_Image** explosion_images,MLV_Sound** sound, Missile_enemy** missiles_enemy, Stats * stats, int* nb_missile_enemy,double* effect_volume) {
     for (int i = 0; i < *nb_enemy; i++) {
         Enemy* enemy = &((*enemies)[i]);
 
@@ -54,7 +54,7 @@ void update_enemy(Enemy** enemies, int* nb_enemy, MLV_Image** explosion_images,M
             }
             if(enemy->explosion_state >20){
                 remove_enemy(enemies, i, nb_enemy);
-                *enemy_killed ++;
+                stats->nb_enemy_killed ++;
                 i--;
             }
         }

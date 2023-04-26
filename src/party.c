@@ -34,7 +34,11 @@ void init_party(double *effect_volume, double *music_volume, int level)
   char **waves = NULL;
   int nb_wave = 0;
   int current_wave = 0;
-  int enemy_killed =0;
+  Stats stats;
+  stats.nb_bonus =0;
+  stats.nb_enemy_killed=0;
+  stats.nb_life=0;
+  stats.start_time = MLV_get_time();
   MLV_Image *background = MLV_load_image("./img/sea_.png");
   MLV_Image *cloud = MLV_load_image("./img/cloud.png");
   MLV_Image *hud = MLV_load_image("./img/hud.png");
@@ -72,7 +76,7 @@ void init_party(double *effect_volume, double *music_volume, int level)
   Enemy *enemies = NULL;
   int nb_bonus = 0;
   Bonus *bonus_list = NULL;
-  int mouse_x, mouse_y;
+  
   int win;
   Nuke nuke_obj = init_nuke(0, 100);
   // init_enemy(&enemies, &nb_enemy, 200, 10);
@@ -117,7 +121,6 @@ void init_party(double *effect_volume, double *music_volume, int level)
     /* Display of the current frame */
     /* THIS FUNCTION CALL A SINGLE TIME MLV_actualize_window */
     // draw_window(&param, &grid);
-    MLV_clear_window(MLV_COLOR_SKY_BLUE);
     y = y + 3;
     y2 = y2 + 1;
     if (y >= HEIGHT)
@@ -149,9 +152,13 @@ void init_party(double *effect_volume, double *music_volume, int level)
     if (quit)
     {
 
-      MLV_get_mouse_position(&mouse_x, &mouse_y);
-
-      init_end(&win, &finish, font_end, font_hud,300, &mouse_x, &mouse_y, &player, &enemy_killed);
+      
+      stats.nb_life = player.life;
+      stats.nb_bonus = player.nuke+player.shield+player.shot;
+      
+     
+      init_end(&win, font_end, font_hud,300, &stats);
+      finish=1;
     }
     else
     {
@@ -159,7 +166,7 @@ void init_party(double *effect_volume, double *music_volume, int level)
       update_bonus(&bonus_list, nb_bonus, heart_animation, shield_animation, fireball_animation);
       update_missile_enemy(&missiles_enemy, nb_missile_enemy);
       update_missile(&missiles, nb_missile);
-      update_enemy(&enemies, &nb_enemy, explosion_images, &explosion, &missiles_enemy,&enemy_killed, &nb_missile_enemy, effect_volume);
+      update_enemy(&enemies, &nb_enemy, explosion_images, &explosion, &missiles_enemy,&stats, &nb_missile_enemy, effect_volume);
       check_collision_enemy(&player, &enemies, &nb_enemy, &quit, &hit, effect_volume);
       check_collision_enemy_missile(&enemies, &missiles, &nb_missile, &nb_enemy, &hit, effect_volume);
       check_collision_enemy_missile_player(&player, &missiles_enemy, &nb_missile_enemy, &quit, &hit, effect_volume);
@@ -204,6 +211,10 @@ void init_party(double *effect_volume, double *music_volume, int level)
   free_animation_images(fireball_animation, 7);
   MLV_free_image(background);
   MLV_free_image(cloud);
+  MLV_free_image(hud);
+  MLV_free_image(nuke);
+  MLV_free_image(shield);
+  MLV_free_image(filtre);
   free(missiles);
   free(missiles_enemy);
   MLV_free_sound(explosion);
