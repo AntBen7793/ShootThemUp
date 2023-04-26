@@ -1,5 +1,3 @@
-#include <MLV/MLV_all.h>
-
 
 void init_missile(Missile** missiles, int* nb_missile, int x, int y, int type);
 void draw_missile(Missile* missile);

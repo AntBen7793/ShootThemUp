@@ -39,6 +39,9 @@ typedef struct {
     int is_use;
     int state;
     int fire;
+    MLV_Image * sprite;
+    MLV_Image * nuke_laser;
+    int anim_state;
 } Nuke;
 
 typedef struct {
