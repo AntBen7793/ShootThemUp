@@ -60,7 +60,6 @@ typedef struct {
     int nb_bonus;
     int time;
     int start_time;
-
 } Stats;
 
 typedef struct {

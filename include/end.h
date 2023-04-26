@@ -1,1 +1,1 @@
-void init_end(int *win, MLV_Font *font_end, MLV_Font *font_hud, int width, Stats * stats);
+void init_end(int *win, MLV_Font *font_end, MLV_Font *font_hud, int width, Stats * stats, Player * player);
