@@ -55,6 +55,15 @@ typedef struct {
 } Missile_enemy;
 
 typedef struct {
+    int nb_enemy_killed;
+    int nb_life;
+    int nb_bonus;
+    int time;
+    int start_time;
+
+} Stats;
+
+typedef struct {
     int x;
     int y;
     int width;

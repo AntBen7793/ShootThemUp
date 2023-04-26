@@ -1,1 +1,1 @@
-void init_end(int *win, int *finish, MLV_Font *font_end, MLV_Font *font_hud, int width, int *mouse_x, int *mouse_y, Player * player, int * enemy_killed);
+void init_end(int *win, MLV_Font *font_end, MLV_Font *font_hud, int width, Stats * stats);
