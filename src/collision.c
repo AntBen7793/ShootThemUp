@@ -60,7 +60,7 @@ void check_collision_enemy_missile(Enemy **enemies, Missile **missiles, int *nb_
 
                 MLV_play_sound((*sound), *effect_volume);
                 (*enemies)[j].life = (*enemies)[j].life - (*missiles)[i].dmg;
-                // remove_enemy(enemies, j, nb_enemy);
+                
                 if ((*missiles)[i].type != 1)
                 {
                     remove_missile(missiles, i, nb_missile);
@@ -146,7 +146,7 @@ void check_collision_enemy(Player *player, Enemy **enemies, int *nb_enemy, int *
     }
 }
 
-void check_collision_nuke_enemy(Nuke* nuke,Enemy **enemies, int *nb_enemy, MLV_Sound **sound, double *effect_volume)
+void check_collision_nuke_enemy(Nuke* nuke,Enemy **enemies, int *nb_enemy, MLV_Sound *sound, double *effect_volume)
 {
 
     for (int i = 0; i < *nb_enemy; i++)

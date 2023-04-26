@@ -6,7 +6,7 @@
 #include "../include/missile_enemy.h"
 
 
-void update_level(char*** waves, int* nb_wave, int* current_waves, Enemy** enemies , int* nb_enemy,Bonus** bonus_list, int* nb_bonus, int* quit){
+void update_level(char*** waves, int* nb_wave, int* current_waves, Enemy** enemies , int* nb_enemy,Bonus** bonus_list, int* nb_bonus, int* quit, int* win){
         int y = -ENEMY_W;
         
         int line_size;
@@ -21,7 +21,6 @@ void update_level(char*** waves, int* nb_wave, int* current_waves, Enemy** enemi
                      x += ENEMY_W;
                 }else if ((*waves)[i][j] == '0'){
                      x += ENEMY_W;
-
                 }else if ((*waves)[i][j] == 'H'){
                     init_bonus(bonus_list, nb_bonus, x+10, y+10, 1);
                      x += ENEMY_W;
@@ -48,6 +47,7 @@ void update_level(char*** waves, int* nb_wave, int* current_waves, Enemy** enemi
                      x += ENEMY_W;
                 }else if ((*waves)[i][j] == 'F'){
                     *quit =1;
+                    *win =1;
                     return;
                 }else if ((*waves)[i][j] == '-'){
                     y += ENEMY_W;

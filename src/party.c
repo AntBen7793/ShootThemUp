@@ -13,12 +13,16 @@
 #include "../include/party.h"
 #include "../include/bonus.h"
 #include "../include/nuke.h"
+#include "../include/keyboard.h"
+#include "../include/menu.h"
+#include "../include/end.h"
 
 void init_party(double *effect_volume, double *music_volume, int level)
 {
   printf("Le début de quelque chose de grand\n");
 
   int quit = 0;
+  int finish = 0;
   struct timespec last, new;
   MLV_Event event;
   MLV_Keyboard_button key_sym;
@@ -30,6 +34,7 @@ void init_party(double *effect_volume, double *music_volume, int level)
   char **waves = NULL;
   int nb_wave = 0;
   int current_wave = 0;
+  int enemy_killed =0;
   MLV_Image *background = MLV_load_image("./img/sea_.png");
   MLV_Image *cloud = MLV_load_image("./img/cloud.png");
   MLV_Image *hud = MLV_load_image("./img/hud.png");
@@ -38,6 +43,7 @@ void init_party(double *effect_volume, double *music_volume, int level)
   MLV_Image *nuke = MLV_load_image("./img/nuke_icon.png");
   MLV_Image *filtre = MLV_load_image("./img/filtre.png");
   MLV_Font *font_hud = MLV_load_font("./font/ARCADECLASSIC.ttf", 40);
+  MLV_Font *font_end = MLV_load_font("./font/ARCADECLASSIC.ttf", 70);
   // MLV_Image *super_shot = MLV_load_image("./img/shield_icon.png");
   MLV_resize_image(shield, 60, 60);
   MLV_resize_image(fireball, 50, 50);
@@ -66,10 +72,12 @@ void init_party(double *effect_volume, double *music_volume, int level)
   Enemy *enemies = NULL;
   int nb_bonus = 0;
   Bonus *bonus_list = NULL;
+  int mouse_x, mouse_y;
+  int win;
   Nuke nuke_obj = init_nuke(0, 100);
   // init_enemy(&enemies, &nb_enemy, 200, 10);
   init_level(&waves, &nb_wave, &current_wave, level);
-  printf("test\n");
+
   MLV_Image **explosion_images = malloc(9 * sizeof(MLV_Image *));
   for (int i = 0; i < 9; i++)
   {
@@ -102,7 +110,7 @@ void init_party(double *effect_volume, double *music_volume, int level)
     fireball_animation[i] = MLV_load_image(filename);
   }
 
-  while (!quit)
+  while (!finish)
   {
     /* Get the time in nanoseconds at the frame beginning */
     clock_gettime(CLOCK_REALTIME, &last);
@@ -120,77 +128,7 @@ void init_party(double *effect_volume, double *music_volume, int level)
     {
       y2 = 0;
     }
-    update_player(&player);
-    if (nb_enemy == 0)
-    {
-      update_level(&waves, &nb_wave, &current_wave, &enemies, &nb_enemy, &bonus_list, &nb_bonus, &quit);
-    }
 
-    if (event == MLV_KEY && key_sym == MLV_KEYBOARD_SPACE && state == MLV_PRESSED)
-    {
-      if (nb_missile < 4)
-      {
-        init_missile(&missiles, &nb_missile, player.x + 10, player.y + 10, 0);
-        init_missile(&missiles, &nb_missile, player.x + (player.width - 20), player.y + 10, 0);
-        MLV_play_sound(rocket, *effect_volume);
-      }
-    }
-    if (event == MLV_KEY && key_sym == MLV_KEYBOARD_b && state == MLV_PRESSED)
-    {
-      if (nb_missile < 4 && player.shot > 0)
-      {
-        init_missile(&missiles, &nb_missile, player.x + 30, player.y + 10, 1);
-        player.shot--;
-        MLV_play_sound(rocket, *effect_volume);
-      }
-    }
-    
-    if (event == MLV_KEY && key_sym == MLV_KEYBOARD_n && state == MLV_PRESSED && player.nuke > 0 && nuke_obj.state == 0)
-    {
-
-     
-      // check_collision_nuke_enemy(&nuke_obj, &enemies, &nb_enemy, &hit, effect_volume);
-      player.nuke --;
-      nuke_obj.is_use = 1;
-      nuke_obj.fire = 1;
-      
-      
-      // MLV_play_sound(rocket, *effect_volume);
-    }
-
-    MLV_draw_image(background, x, y);
-    MLV_draw_image(background, x, y - HEIGHT);
-    MLV_draw_image(cloud, x, y2);
-    MLV_draw_image(cloud, x, y2 - HEIGHT);
-
-    draw_player(&player);
-    update_bonus(&bonus_list, nb_bonus, heart_animation, shield_animation, fireball_animation);
-    update_missile_enemy(&missiles_enemy, nb_missile_enemy);
-    update_missile(&missiles, nb_missile);
-    update_enemy(&enemies, &nb_enemy, explosion_images, &explosion, &missiles_enemy, &nb_missile_enemy, effect_volume);
-    check_collision_enemy(&player, &enemies, &nb_enemy, &quit, &hit, effect_volume);
-    check_collision_enemy_missile(&enemies, &missiles, &nb_missile, &nb_enemy, &hit, effect_volume);
-    check_collision_enemy_missile_player(&player, &missiles_enemy, &nb_missile_enemy, &quit, &hit, effect_volume);
-    check_collision_bonus_player(&player, &bonus_list, &nb_bonus, &take, effect_volume);
-    
-    if (nuke_obj.is_use == 1)
-    {
-
-      update_nuke(&nuke_obj);
-      
-      if (event == MLV_KEY && key_sym == MLV_KEYBOARD_n && state == MLV_PRESSED && nuke_obj.state == 1)
-      {
-        
-        
-        check_collision_nuke_enemy(&nuke_obj, &enemies, &nb_enemy, &hit, effect_volume);
-
-        nuke_obj.fire =0;
-        nuke_obj.state =0;
-        nuke_obj.is_use =0;
-      }
-      if(nuke_obj.state == 0 && nuke_obj.fire == 1)nuke_obj.state = 1;
-    }
-    draw_health_bar(WIDTH - 200, HEIGHT - 100, 200, 20, &player, hud, shield, fireball, nuke, font_hud, filtre);
     /* We get there at most one keyboard event each frame */
     event = MLV_get_event(&key_sym, NULL, NULL, NULL, NULL,
                           NULL, NULL, NULL, &state);
@@ -198,7 +136,49 @@ void init_party(double *effect_volume, double *music_volume, int level)
     /* Event resolution here... */
     /* Moves of the entities on the board */
     /* Collision resolutions */
+    if (nb_enemy == 0)
+    {
+      update_level(&waves, &nb_wave, &current_wave, &enemies, &nb_enemy, &bonus_list, &nb_bonus, &quit, &win);
+    }
 
+    update_player(&player);
+    MLV_draw_image(background, x, y);
+    MLV_draw_image(background, x, y - HEIGHT);
+    MLV_draw_image(cloud, x, y2);
+    MLV_draw_image(cloud, x, y2 - HEIGHT);
+    if (quit)
+    {
+
+      MLV_get_mouse_position(&mouse_x, &mouse_y);
+
+      init_end(&win, &finish, font_end, font_hud,300, &mouse_x, &mouse_y, &player, &enemy_killed);
+    }
+    else
+    {
+      draw_player(&player);
+      update_bonus(&bonus_list, nb_bonus, heart_animation, shield_animation, fireball_animation);
+      update_missile_enemy(&missiles_enemy, nb_missile_enemy);
+      update_missile(&missiles, nb_missile);
+      update_enemy(&enemies, &nb_enemy, explosion_images, &explosion, &missiles_enemy,&enemy_killed, &nb_missile_enemy, effect_volume);
+      check_collision_enemy(&player, &enemies, &nb_enemy, &quit, &hit, effect_volume);
+      check_collision_enemy_missile(&enemies, &missiles, &nb_missile, &nb_enemy, &hit, effect_volume);
+      check_collision_enemy_missile_player(&player, &missiles_enemy, &nb_missile_enemy, &quit, &hit, effect_volume);
+      check_collision_bonus_player(&player, &bonus_list, &nb_bonus, &take, effect_volume);
+      check_keyboard_pressed(event, key_sym, state, &nb_missile, &player, &enemies, &nb_enemy, &missiles, &nuke_obj, rocket, hit, effect_volume);
+
+      if (nuke_obj.anim_state < 750 && nuke_obj.anim_state > 0)
+      {
+
+        nuke_animation(&nuke_obj);
+
+        check_collision_nuke_enemy(&nuke_obj, &enemies, &nb_enemy, hit, effect_volume);
+      }
+      else
+      {
+        nuke_obj.anim_state = 750;
+      }
+      draw_health_bar(WIDTH - 200, HEIGHT - 100, 200, 20, &player, hud, shield, fireball, nuke, font_hud, filtre);
+    }
     /* Get the time in nanoseconds at the frame ending */
     clock_gettime(CLOCK_REALTIME, &new);
 
@@ -218,8 +198,10 @@ void init_party(double *effect_volume, double *music_volume, int level)
     free(waves[i]);
   }
   free(waves);
-  free_animation_images(explosion_images, 6);
+  free_animation_images(explosion_images, 7);
   free_animation_images(heart_animation, 7);
+  free_animation_images(shield_animation, 7);
+  free_animation_images(fireball_animation, 7);
   MLV_free_image(background);
   MLV_free_image(cloud);
   free(missiles);

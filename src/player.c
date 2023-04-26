@@ -1,7 +1,6 @@
-#include "../include/struct.h"
-
-#include "../include/player.h"
 #include <MLV/MLV_all.h>
+#include "../include/struct.h"
+#include "../include/player.h"
 #include "../include/const.h"
 
 
@@ -18,16 +17,15 @@ Player init_player(){
     player.shot = 0;
     player.nuke = 0;
     /* sprites */
-    player.sprite = MLV_load_image("./img/player.png");
-    player.sprite_right = MLV_load_image("./img/player-right.png");
-    player.sprite_left = MLV_load_image("./img/player-left.png");
-    player.sprite_forward = MLV_load_image("./img/player1.png");
+    player.sprite = MLV_load_image("./img/state1_player.png");
+    player.sprite_right = MLV_load_image("./img/state1_right_player.png");
+    player.sprite_left = MLV_load_image("./img/state1_left_player.png");
+    player.sprite_forward = MLV_load_image("./img/state0_player.png");
     player.sprite_shield = MLV_load_image("./img/shield_active_state0.png");
    
-    MLV_resize_image(player.sprite, player.width, player.width);
-    MLV_resize_image(player.sprite_left, player.width, player.width);
-    MLV_resize_image(player.sprite_right, player.width, player.width);
-    MLV_resize_image(player.sprite_forward, player.width, player.width);
+    //MLV_resize_image(player.sprite_left, player.width, player.width);
+    //MLV_resize_image(player.sprite_right, player.width, player.width);
+    //MLV_resize_image(player.sprite_forward, player.width, player.width);
 
  return player;
 }
@@ -55,7 +53,7 @@ void draw_player(Player* player){
     else {
         MLV_draw_image(player->sprite, player->x, player->y);
     }
-     if(player->shield > 0){
+    if(player->shield > 0){
         MLV_resize_image(player->sprite_shield, player->width+30, player->width+30);
         MLV_draw_image(player->sprite_shield, player->x-15, player->y-15);
      }
@@ -78,6 +76,8 @@ void check_keyboard(Player* player){
     } else {
         player->dy = 0;
     }
+
+    
 
 
 
