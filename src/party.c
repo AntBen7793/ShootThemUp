@@ -60,7 +60,6 @@ void init_party(double *effect_volume, double *music_volume, int level)
   Player player = init_player();
 
   /* Music */
-  MLV_init_audio();
   // MLV_Sound* rocket =  MLV_load_sound("soud/rocket.mp3");
   MLV_Music *music = MLV_load_music("sound/DangerZone.mp3");
   MLV_play_music(music, *music_volume, -1);
@@ -151,8 +150,8 @@ void init_party(double *effect_volume, double *music_volume, int level)
     MLV_draw_image(cloud, x, y2 - HEIGHT);
     if (quit)
     {
-
-      init_end(&win, font_end, font_hud,300, &stats, &player);
+      MLV_stop_music();
+      init_end(&win, font_end, font_hud,300, &stats, &player, music_volume);
       finish=1;
     }
     else
@@ -215,7 +214,6 @@ void init_party(double *effect_volume, double *music_volume, int level)
   MLV_free_sound(explosion);
   MLV_free_sound(rocket);
   MLV_free_sound(hit);
-  MLV_stop_music();
   MLV_free_music(music);
 
   printf("fin\n");

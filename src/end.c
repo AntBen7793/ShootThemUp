@@ -24,7 +24,7 @@ void display_info(int x, int y, char *text, int value, MLV_Font *font_hud)
     MLV_draw_text_with_font(x + 370, y, text_value, font_hud, MLV_COLOR_WHITE);
 }
 
-void init_end(int *win, MLV_Font *font_end, MLV_Font *font_hud, int width, Stats *stats, Player * player)
+void init_end(int *win, MLV_Font *font_end, MLV_Font *font_hud, int width, Stats *stats, Player * player, double * music_volume)
 {
     struct timespec last, new;
     double accum;
@@ -37,6 +37,14 @@ void init_end(int *win, MLV_Font *font_end, MLV_Font *font_hud, int width, Stats
     MLV_Image *cloud = MLV_load_image("./img/cloud.png");
     MLV_resize_image(cloud, WIDTH, HEIGHT);
     MLV_resize_image(background, WIDTH, HEIGHT);
+    MLV_Music *music;
+    if(*win){
+         music = MLV_load_music("sound/victory_music.mp3");
+    }else{
+         music = MLV_load_music("sound/loose_music.mp3");
+    }
+   
+    MLV_play_music(music, *music_volume, -1);
     int x = 0;
     int y = HEIGHT;
     int y2 = HEIGHT;
@@ -101,6 +109,8 @@ void init_end(int *win, MLV_Font *font_end, MLV_Font *font_hud, int width, Stats
 
         MLV_actualise_window();
     }
+    MLV_stop_music();
+    MLV_free_music(music);
     MLV_free_image(background);
     MLV_free_image(cloud);
 }
