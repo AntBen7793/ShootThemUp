@@ -50,7 +50,7 @@ void draw_bonus(Bonus *bonus)
 {
 
     MLV_draw_image((*bonus).sprite, (*bonus).x, (*bonus).y);
-    MLV_draw_rectangle((*bonus).x, (*bonus).y, (*bonus).width, (*bonus).width, MLV_COLOR_RED);
+    //MLV_draw_rectangle((*bonus).x, (*bonus).y, (*bonus).width, (*bonus).width, MLV_COLOR_RED);
 }
 void update_bonus(Bonus **bonus_list, int nb_bonus, MLV_Image **heart_animation, MLV_Image **shield_animation, MLV_Image **fireball_animation)
 {

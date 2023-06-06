@@ -21,7 +21,7 @@ void draw_button(int x, int y, int w, int h, char *text, MLV_Font *font, int mou
     MLV_draw_text_box_with_font(x, y, w, h, text, font, 1, MLV_COLOR_WHITE, text_color, MLV_COLOR_NAVY_BLUE, MLV_TEXT_CENTER, MLV_TEXT_CENTER, MLV_TEXT_CENTER);
 }
 
-void draw_level_button(int x, int y, int w, int h, char *text, MLV_Font *font, int mouse_x, int mouse_y, int *level, int number, double *music_volume, double *effect_volume, MLV_Music *music, int *pressed)
+void draw_level_button(int x, int y, int w, int h, char *text, MLV_Font *font, int mouse_x, int mouse_y, int *level, int number, double *music_volume, double *effect_volume, MLV_Music *music, MLV_Sound *start, int *pressed, int *transition_state)
 {
     int state = 0;
     if (number <= *level)
@@ -55,10 +55,27 @@ void draw_level_button(int x, int y, int w, int h, char *text, MLV_Font *font, i
         mouse_y >= y && mouse_y <= y + h &&
         number <= *level)
     {
+        MLV_play_sound(start, *effect_volume);
+        while (*transition_state < WIDTH)
+        {
+
+            /* Dessiner la transition */
+            MLV_draw_filled_rectangle(0, 0, *transition_state, HEIGHT, MLV_COLOR_BLACK);
+
+            /* Actualiser l'affichage */
+            MLV_actualise_window();
+
+            /* Temporisation pour contrôler la vitesse de la transition */
+            MLV_wait_milliseconds(10);
+
+            /* Mettre à jour l'état de la transition */
+            *transition_state += 30;
+        }
         MLV_stop_music();
         init_party(effect_volume, music_volume, number, level);
         MLV_play_music(music, *music_volume, -1);
         *pressed = 1;
+        *transition_state = 0;
     }
 
     // printf("level : %d\n", *level);
@@ -104,6 +121,7 @@ void init_menu(double *music_volume, double *effect_volume, double *new_music_vo
     int button_y2 = 500;
     int button_y3 = 600;
     int margin = 20;
+    int transition_state = 1;
     MLV_Font *font = MLV_load_font("./font/ARCADECLASSIC.ttf", 50);
     MLV_Font *font_title = MLV_load_font("./font/ARCADECLASSIC.ttf", 30);
     double accum;
@@ -120,6 +138,9 @@ void init_menu(double *music_volume, double *effect_volume, double *new_music_vo
     MLV_Image *background = MLV_load_image("./img/sea_.png");
     MLV_Image *cloud = MLV_load_image("./img/cloud.png");
     MLV_Image *logo = MLV_load_image("./img/topgun.png");
+    MLV_Sound *start = MLV_load_sound("sound/game-start.wav");
+    MLV_Sound *select = MLV_load_sound("sound/select.wav");
+    MLV_Sound *cheat = MLV_load_sound("sound/bonus.ogg");
     MLV_resize_image(cloud, WIDTH, HEIGHT);
     MLV_resize_image(logo, 600, 200);
     MLV_resize_image(background, WIDTH, HEIGHT);
@@ -164,6 +185,7 @@ void init_menu(double *music_volume, double *effect_volume, double *new_music_vo
                 mouse_x >= button_x && mouse_x <= button_x + button_width &&
                 mouse_y >= button_y && mouse_y <= button_y + button_height)
             {
+                MLV_play_sound(select, *effect_volume);
                 main_menu_state = 0;
                 setting_menu_state = 0;
                 level_menu_state = 1;
@@ -174,6 +196,7 @@ void init_menu(double *music_volume, double *effect_volume, double *new_music_vo
                 mouse_x >= button_x && mouse_x <= button_x + button_width &&
                 mouse_y >= button_y2 && mouse_y <= button_y2 + button_height)
             {
+                MLV_play_sound(select, *effect_volume);
                 main_menu_state = 0;
                 setting_menu_state = 1;
                 level_menu_state = 0;
@@ -184,18 +207,19 @@ void init_menu(double *music_volume, double *effect_volume, double *new_music_vo
                 mouse_x >= button_x && mouse_x <= button_x + button_width &&
                 mouse_y >= button_y3 && mouse_y <= button_y3 + button_height)
             {
+                MLV_play_sound(select, *effect_volume);
                 return;
             }
         }
         if (level_menu_state && pressed == 0) // Vérifier si le menu des level est actif
         {
 
-            draw_level_button(button_x - button_width - margin, button_y, button_width, button_height, "Level 1", font, mouse_x, mouse_y, &level, 1, music_volume, effect_volume, music, &pressed);
-            draw_level_button(button_x, button_y, button_width, button_height, "Level 2", font, mouse_x, mouse_y, &level, 2, music_volume, effect_volume, music, &pressed);
-            draw_level_button(button_x + button_width + margin, button_y, button_width, button_height, "Level 3", font, mouse_x, mouse_y, &level, 3, music_volume, effect_volume, music, &pressed);
-            draw_level_button(button_x - button_width - margin, button_y2, button_width, button_height, "Level 4", font, mouse_x, mouse_y, &level, 4, music_volume, effect_volume, music, &pressed);
-            draw_level_button(button_x, button_y2, button_width, button_height, "Level 5", font, mouse_x, mouse_y, &level, 5, music_volume, effect_volume, music, &pressed);
-            draw_level_button(button_x + button_width + margin, button_y2, button_width, button_height, "Level 6", font, mouse_x, mouse_y, &level, 6, music_volume, effect_volume, music, &pressed);
+            draw_level_button(button_x - button_width - margin, button_y, button_width, button_height, "Level 1", font, mouse_x, mouse_y, &level, 1, music_volume, effect_volume, music, start, &pressed, &transition_state);
+            draw_level_button(button_x, button_y, button_width, button_height, "Level 2", font, mouse_x, mouse_y, &level, 2, music_volume, effect_volume, music, start, &pressed, &transition_state);
+            draw_level_button(button_x + button_width + margin, button_y, button_width, button_height, "Level 3", font, mouse_x, mouse_y, &level, 3, music_volume, effect_volume, music, start, &pressed, &transition_state);
+            draw_level_button(button_x - button_width - margin, button_y2, button_width, button_height, "Level 4", font, mouse_x, mouse_y, &level, 4, music_volume, effect_volume, music, start, &pressed, &transition_state);
+            draw_level_button(button_x, button_y2, button_width, button_height, "Level 5", font, mouse_x, mouse_y, &level, 5, music_volume, effect_volume, music, start, &pressed, &transition_state);
+            draw_level_button(button_x + button_width + margin, button_y2, button_width, button_height, "Level 6", font, mouse_x, mouse_y, &level, 6, music_volume, effect_volume, music, start, &pressed, &transition_state);
 
             draw_button(button_x, button_y3, button_width, button_height, "Back", font, mouse_x, mouse_y);
 
@@ -203,6 +227,7 @@ void init_menu(double *music_volume, double *effect_volume, double *new_music_vo
                 mouse_x >= button_x && mouse_x <= button_x + button_width &&
                 mouse_y >= button_y3 && mouse_y <= button_y3 + button_height)
             {
+                MLV_play_sound(select, *effect_volume);
                 main_menu_state = 1;
                 setting_menu_state = 0;
                 level_menu_state = 0;
@@ -211,15 +236,17 @@ void init_menu(double *music_volume, double *effect_volume, double *new_music_vo
 
             if (MLV_get_keyboard_state(MLV_KEYBOARD_LCTRL) == MLV_PRESSED &&
                 MLV_get_keyboard_state(MLV_KEYBOARD_LALT) == MLV_PRESSED &&
-                MLV_get_keyboard_state(MLV_KEYBOARD_KP6) == MLV_PRESSED )
+                MLV_get_keyboard_state(MLV_KEYBOARD_KP6) == MLV_PRESSED)
             {
+                MLV_play_sound(cheat, *effect_volume);
                 level = 6;
             }
 
             if (MLV_get_keyboard_state(MLV_KEYBOARD_LCTRL) == MLV_PRESSED &&
                 MLV_get_keyboard_state(MLV_KEYBOARD_LALT) == MLV_PRESSED &&
-                MLV_get_keyboard_state(MLV_KEYBOARD_KP1) == MLV_PRESSED )
+                MLV_get_keyboard_state(MLV_KEYBOARD_KP1) == MLV_PRESSED)
             {
+                 MLV_play_sound(cheat, *effect_volume);
                 level = 1;
             }
         }
@@ -234,6 +261,7 @@ void init_menu(double *music_volume, double *effect_volume, double *new_music_vo
                 mouse_x >= button_x && mouse_x <= button_x + button_width &&
                 mouse_y >= button_y3 && mouse_y <= button_y3 + button_height)
             {
+                MLV_play_sound(select, *effect_volume);
                 main_menu_state = 1;
                 setting_menu_state = 0;
                 level_menu_state = 0;
@@ -265,4 +293,12 @@ void init_menu(double *music_volume, double *effect_volume, double *new_music_vo
     MLV_free_image(background);
     MLV_stop_music();
     MLV_free_music(music);
+    MLV_free_sound(start);
+    MLV_free_sound(select);
+    MLV_free_sound(cheat);
+
+    MLV_free_font(font);
+    MLV_free_font(font_title);
+    
+
 }

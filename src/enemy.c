@@ -138,7 +138,7 @@ void movement_enemy(Enemy* enemy){
 void draw_enemy(Enemy* enemy){
 
         MLV_draw_image((*enemy).sprite, (*enemy).x, (*enemy).y);
-        MLV_draw_rectangle((*enemy).x, (*enemy).y, (*enemy).width, (*enemy).width, MLV_COLOR_RED);
+        //MLV_draw_rectangle((*enemy).x, (*enemy).y, (*enemy).width, (*enemy).width, MLV_COLOR_RED);
 }
 
 void add_enemy(Enemy** enemies, Enemy enemy, int* nb_enemy){

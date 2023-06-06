@@ -44,7 +44,7 @@ void update_missile(Missile **missiles, int nb_missile)
 void draw_missile(Missile *missile)
 {
     MLV_draw_image((*missile).sprite, (*missile).x, (*missile).y);
-    MLV_draw_rectangle((*missile).x, (*missile).y, (*missile).width, (*missile).height, MLV_COLOR_RED);
+    //MLV_draw_rectangle((*missile).x, (*missile).y, (*missile).width, (*missile).height, MLV_COLOR_RED);
 }
 
 void add_missile(Missile **missiles, Missile missile, int *nb_missile)

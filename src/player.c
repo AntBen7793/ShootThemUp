@@ -57,7 +57,7 @@ void draw_player(Player* player){
         MLV_resize_image(player->sprite_shield, player->width+30, player->width+30);
         MLV_draw_image(player->sprite_shield, player->x-15, player->y-15);
      }
-    MLV_draw_rectangle(player->x, player->y, player->width, player->width, MLV_COLOR_BLUE);
+    //MLV_draw_rectangle(player->x, player->y, player->width, player->width, MLV_COLOR_BLUE);
 }
 
 void check_keyboard(Player* player){

@@ -30,7 +30,7 @@ void update_missile_enemy(Missile_enemy** missiles_enemy, int nb_missile_enemy){
 
 void draw_missile_enemy(Missile_enemy* missile_enemy){
     MLV_draw_image((*missile_enemy).sprite, (*missile_enemy).x, (*missile_enemy).y);
-    MLV_draw_rectangle((*missile_enemy).x, (*missile_enemy).y, (*missile_enemy).width, (*missile_enemy).height, MLV_COLOR_RED); 
+    //MLV_draw_rectangle((*missile_enemy).x, (*missile_enemy).y, (*missile_enemy).width, (*missile_enemy).height, MLV_COLOR_RED); 
 }
 
 void add_missile_enemy(Missile_enemy** missiles_enemy, Missile_enemy missile_enemy, int* nb_missile_enemy){

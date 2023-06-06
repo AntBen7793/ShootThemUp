@@ -41,7 +41,7 @@ void display_note(int x, int y, char* text, int value, MLV_Font *font_note, MLV_
         color = MLV_COLOR_ORANGE;
     }else if(value < 50){
         note = "C";
-        color = MLV_COLOR_YELLOW;
+        color = MLV_COLOR_YELLOW2;
     }else if(value < 80){
         note = "B";
         color = MLV_COLOR_GREEN;
@@ -54,7 +54,7 @@ void display_note(int x, int y, char* text, int value, MLV_Font *font_note, MLV_
     MLV_draw_filled_circle(x + 385, y + 30, 30, color);
     MLV_draw_text_with_font(x + 370, y, note, font_note, MLV_COLOR_WHITE);
 }
-void init_end(int *win, MLV_Font *font_end, MLV_Font *font_hud, MLV_Font *font_note,int width, Stats *stats, Player *player, double *music_volume)
+void init_end(int *win, MLV_Font *font_end, MLV_Font *font_hud, MLV_Font *font_note,int width, Stats *stats, Player *player, double *music_volume, double *effect_volume)
 {
 
     struct timespec last, new;
@@ -69,14 +69,15 @@ void init_end(int *win, MLV_Font *font_end, MLV_Font *font_hud, MLV_Font *font_n
     MLV_Image *cloud = MLV_load_image("./img/cloud.png");
     MLV_resize_image(cloud, WIDTH, HEIGHT);
     MLV_resize_image(background, WIDTH, HEIGHT);
+    MLV_Sound *select = MLV_load_sound("sound/select.wav");
     MLV_Music *music;
-    if (*win)
+    if (*win == 1)
     {
-        music = MLV_load_music("sound/victory_music.mp3");
+        music = MLV_load_music("./sound/victory_music.mp3");
     }
     else
     {
-        music = MLV_load_music("sound/loose_music.mp3");
+        music = MLV_load_music("./sound/loose_music.mp3");
     }
 
     MLV_play_music(music, *music_volume, -1);
@@ -85,10 +86,6 @@ void init_end(int *win, MLV_Font *font_end, MLV_Font *font_hud, MLV_Font *font_n
     int y2 = HEIGHT;
     int note;
     //int ratio =((stats->nb_shoot)/2 / stats->nb_enemy_killed)*100;
-    //calcul du ratio
-   
-    printf("nb shoot %d\n", stats->nb_shoot);
-    printf("nb enemy killed %d\n", stats->nb_enemy_killed);
     while (!leave)
     {
         clock_gettime(CLOCK_REALTIME, &last);
@@ -136,6 +133,7 @@ void init_end(int *win, MLV_Font *font_end, MLV_Font *font_hud, MLV_Font *font_n
             mouse_x >= 290 && mouse_x <= 290 + 220 &&
             mouse_y >= 600 && mouse_y <= 600 + 70)
         {
+            MLV_play_sound(select, *effect_volume);
             leave = 1;
         }
         clock_gettime(CLOCK_REALTIME, &new);
