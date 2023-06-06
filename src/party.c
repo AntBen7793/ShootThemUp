@@ -17,7 +17,7 @@
 #include "../include/menu.h"
 #include "../include/end.h"
 
-void init_party(double *effect_volume, double *music_volume, int level)
+void init_party(double *effect_volume, double *music_volume, int level, int *current)
 {
   printf("Le début de quelque chose de grand\n");
 
@@ -38,6 +38,7 @@ void init_party(double *effect_volume, double *music_volume, int level)
   stats.nb_bonus =0;
   stats.nb_enemy_killed=0;
   stats.nb_life=0;
+  stats.nb_shoot =0;
   stats.start_time = MLV_get_time();
   MLV_Image *background = MLV_load_image("./img/sea_.png");
   MLV_Image *cloud = MLV_load_image("./img/cloud.png");
@@ -48,6 +49,7 @@ void init_party(double *effect_volume, double *music_volume, int level)
   MLV_Image *filtre = MLV_load_image("./img/filtre.png");
   MLV_Font *font_hud = MLV_load_font("./font/ARCADECLASSIC.ttf", 40);
   MLV_Font *font_end = MLV_load_font("./font/ARCADECLASSIC.ttf", 70);
+  MLV_Font *font_note = MLV_load_font("./font/ARCADECLASSIC.ttf", 60);
   // MLV_Image *super_shot = MLV_load_image("./img/shield_icon.png");
   MLV_resize_image(shield, 60, 60);
   MLV_resize_image(fireball, 50, 50);
@@ -151,8 +153,13 @@ void init_party(double *effect_volume, double *music_volume, int level)
     if (quit)
     {
       MLV_stop_music();
-      init_end(&win, font_end, font_hud,300, &stats, &player, music_volume);
+      init_end(&win, font_end, font_hud, font_note,300, &stats, &player, music_volume);
       finish=1;
+     
+      if(win == 1){
+        *current+=1;
+      }
+       
     }
     else
     {

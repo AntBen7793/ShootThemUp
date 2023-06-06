@@ -1,1 +1,1 @@
-void init_end(int *win, MLV_Font *font_end, MLV_Font *font_hud, int width, Stats * stats, Player * player,  double * music_volume);
+void init_end(int *win, MLV_Font *font_end, MLV_Font *font_hud, MLV_Font *font_note,int width, Stats *stats, Player *player, double *music_volume);

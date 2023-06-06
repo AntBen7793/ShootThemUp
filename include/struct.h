@@ -58,6 +58,7 @@ typedef struct {
     int nb_enemy_killed;
     int nb_life;
     int nb_bonus;
+    int nb_shoot;
     int time;
     int start_time;
 } Stats;

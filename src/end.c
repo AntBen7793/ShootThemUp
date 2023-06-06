@@ -23,31 +23,72 @@ void display_info(int x, int y, char *text, int value, MLV_Font *font_hud)
     snprintf(text_value, sizeof(text_value), "%d", value);
     MLV_draw_text_with_font(x + 370, y, text_value, font_hud, MLV_COLOR_WHITE);
 }
+void display_note(int x, int y, char* text, int value, MLV_Font *font_note, MLV_Font *font_end){
+    MLV_draw_text_with_font(x, y, text, font_end, MLV_COLOR_WHITE);
+    //select color
+    MLV_Color color;
 
-void init_end(int *win, MLV_Font *font_end, MLV_Font *font_hud, int width, Stats *stats, Player * player, double * music_volume)
+    char* note;
+
+    if(value < 0){
+        note = "F";
+        color = MLV_COLOR_DARK_RED;
+    }else if(value < 10){
+        note = "E";
+        color = MLV_COLOR_RED;
+    }else if(value < 30){
+        note = "D";
+        color = MLV_COLOR_ORANGE;
+    }else if(value < 50){
+        note = "C";
+        color = MLV_COLOR_YELLOW;
+    }else if(value < 80){
+        note = "B";
+        color = MLV_COLOR_GREEN;
+    }else{
+        note = "A";
+        color = MLV_COLOR_GOLD;
+    }
+
+    //draw background circle
+    MLV_draw_filled_circle(x + 385, y + 30, 30, color);
+    MLV_draw_text_with_font(x + 370, y, note, font_note, MLV_COLOR_WHITE);
+}
+void init_end(int *win, MLV_Font *font_end, MLV_Font *font_hud, MLV_Font *font_note,int width, Stats *stats, Player *player, double *music_volume)
 {
+
     struct timespec last, new;
     double accum;
     int leave = 0;
     stats->time = (MLV_get_time() - stats->start_time) / 1000;
     stats->nb_life = player->life;
-    stats->nb_bonus = player->nuke+player->shield+player->shot;
+    stats->nb_bonus = player->nuke + player->shield + player->shot;
+    stats->nb_shoot = player->shot;
     int mouse_x, mouse_y;
     MLV_Image *background = MLV_load_image("./img/sea_.png");
     MLV_Image *cloud = MLV_load_image("./img/cloud.png");
     MLV_resize_image(cloud, WIDTH, HEIGHT);
     MLV_resize_image(background, WIDTH, HEIGHT);
     MLV_Music *music;
-    if(*win){
-         music = MLV_load_music("sound/victory_music.mp3");
-    }else{
-         music = MLV_load_music("sound/loose_music.mp3");
+    if (*win)
+    {
+        music = MLV_load_music("sound/victory_music.mp3");
     }
-   
+    else
+    {
+        music = MLV_load_music("sound/loose_music.mp3");
+    }
+
     MLV_play_music(music, *music_volume, -1);
     int x = 0;
     int y = HEIGHT;
     int y2 = HEIGHT;
+    int note;
+    //int ratio =((stats->nb_shoot)/2 / stats->nb_enemy_killed)*100;
+    //calcul du ratio
+   
+    printf("nb shoot %d\n", stats->nb_shoot);
+    printf("nb enemy killed %d\n", stats->nb_enemy_killed);
     while (!leave)
     {
         clock_gettime(CLOCK_REALTIME, &last);
@@ -79,7 +120,8 @@ void init_end(int *win, MLV_Font *font_end, MLV_Font *font_hud, int width, Stats
         display_info(180, 320, "Bonus remaining", stats->nb_bonus, font_hud);
         display_info(180, 360, "Enemy killed", stats->nb_enemy_killed, font_hud);
         display_info(180, 400, "Time in seconde", stats->time, font_hud);
-
+        note = stats->nb_life + stats->nb_bonus + stats->nb_enemy_killed - stats->time/2;
+        display_note(180, 490, "Rank", note, font_note, font_hud);
         if (*win == 1)
         {
             // MLV_draw_text_with_font(290, 500, "WIN", font_end, MLV_COLOR_ORANGE1);
