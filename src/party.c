@@ -156,7 +156,7 @@ void init_party(double *effect_volume, double *music_volume, int level, int *cur
       init_end(&win, font_end, font_hud, font_note,300, &stats, &player, music_volume);
       finish=1;
      
-      if(win == 1){
+      if(win == 1 && level >= *current){
         *current+=1;
       }
        
