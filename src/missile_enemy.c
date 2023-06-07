@@ -5,8 +5,6 @@
 
 
 void init_missile_enemy(Missile_enemy** missiles_enemy, int* nb_missile_enemy, int x, int y){
-    
-
     Missile_enemy missile_enemy;
     missile_enemy.x = x;
     missile_enemy.y = y;

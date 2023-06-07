@@ -6,7 +6,7 @@
 #include "../include/collision.h"
 #include "../include/nuke.h"
 
-void check_keyboard_pressed(MLV_Event event, MLV_Keyboard_button key_sym, MLV_Button_state state, int *nb_missile, Player *player, Enemy **enemies, int * nb_enemy, Missile **missiles,Nuke * nuke_obj, MLV_Sound *rocket, MLV_Sound *hit,double *effect_volume)
+void check_keyboard_pressed(MLV_Event event, MLV_Keyboard_button key_sym, MLV_Button_state state, int *nb_missile, Player *player, Enemy **enemies, int * nb_enemy, Missile **missiles,Nuke * nuke_obj, MLV_Sound *rocket,MLV_Sound *laser, MLV_Sound *hit,double *effect_volume)
 {
   if (event == MLV_KEY && key_sym == MLV_KEYBOARD_SPACE && state == MLV_PRESSED)
   {
@@ -35,6 +35,7 @@ void check_keyboard_pressed(MLV_Event event, MLV_Keyboard_button key_sym, MLV_Bu
     nuke_obj->fire = 1;
 
     // MLV_play_sound(rocket, *effect_volume);
+     
   }
   if (nuke_obj->is_use == 1)
     {
@@ -45,7 +46,7 @@ void check_keyboard_pressed(MLV_Event event, MLV_Keyboard_button key_sym, MLV_Bu
       {
         
         
-       
+         MLV_play_sound(laser, *effect_volume);
         nuke_obj->anim_state = 99;
         nuke_obj->fire =0;
         nuke_obj->state =0;

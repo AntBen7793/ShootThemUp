@@ -64,12 +64,16 @@ void init_party(double *effect_volume, double *music_volume, int level, int *cur
   /* Music */
   // MLV_Sound* rocket =  MLV_load_sound("soud/rocket.mp3");
   MLV_Music *music = MLV_load_music("sound/DangerZone.mp3");
-  MLV_play_music(music, *music_volume, -1);
+
   MLV_Sound *hit = MLV_load_sound("sound/hit.wav");
   MLV_Sound *take = MLV_load_sound("sound/bonus.ogg");
   MLV_Sound *explosion = MLV_load_sound("sound/explosion.ogg");
   MLV_Sound *rocket = MLV_load_sound("sound/rocket.ogg");
   MLV_Sound *crash = MLV_load_sound("sound/crash.wav");
+  MLV_Sound *laser = MLV_load_sound("sound/laser.wav");
+  MLV_Sound *start = MLV_load_sound("sound/start.wav");
+  MLV_play_sound(start, *effect_volume);
+  MLV_play_music(music, *music_volume, -1);
   int nb_missile = 0;
   Missile *missiles = NULL;
   int nb_missile_enemy = 0;
@@ -79,6 +83,7 @@ void init_party(double *effect_volume, double *music_volume, int level, int *cur
   int nb_bonus = 0;
   Bonus *bonus_list = NULL;
   int win = 0;
+  int frame_timer = 0;
   Nuke nuke_obj = init_nuke(0, 100);
   // init_enemy(&enemies, &nb_enemy, 200, 10);
   init_level(&waves, &nb_wave, &current_wave, level);
@@ -183,7 +188,7 @@ void init_party(double *effect_volume, double *music_volume, int level, int *cur
           }
 
           /* Actualiser l'affichage */
-        
+
           MLV_actualise_window();
 
           /* Temporisation pour contrôler la vitesse de la transition */
@@ -211,30 +216,40 @@ void init_party(double *effect_volume, double *music_volume, int level, int *cur
     }
     else
     {
-      draw_player(&player);
-      update_bonus(&bonus_list, nb_bonus, heart_animation, shield_animation, fireball_animation);
-      update_missile_enemy(&missiles_enemy, nb_missile_enemy);
-      update_missile(&missiles, nb_missile);
-      update_enemy(&enemies, &nb_enemy, explosion_images, &explosion, &missiles_enemy, &stats, &nb_missile_enemy, effect_volume);
-      check_collision_enemy(&player, &enemies, &nb_enemy, &quit, &hit, effect_volume);
-      check_collision_enemy_missile(&enemies, &missiles, &nb_missile, &nb_enemy, &hit, effect_volume);
-      check_collision_enemy_missile_player(&player, &missiles_enemy, &nb_missile_enemy, &quit, &hit, effect_volume);
-      check_collision_bonus_player(&player, &bonus_list, &nb_bonus, &take, effect_volume);
-      check_keyboard_pressed(event, key_sym, state, &nb_missile, &player, &enemies, &nb_enemy, &missiles, &nuke_obj, rocket, hit, effect_volume);
 
-      if (nuke_obj.anim_state < 750 && nuke_obj.anim_state > 0)
+      if (frame_timer >= 110)
       {
+        
+        update_bonus(&bonus_list, nb_bonus, heart_animation, shield_animation, fireball_animation);
+        update_missile_enemy(&missiles_enemy, nb_missile_enemy);
+        update_missile(&missiles, nb_missile);
+        update_enemy(&enemies, &nb_enemy, explosion_images, &explosion, &missiles_enemy, &stats, &nb_missile_enemy, effect_volume);
+        check_collision_enemy(&player, &enemies, &nb_enemy, &quit, &hit, effect_volume);
+        check_collision_enemy_missile(&enemies, &missiles, &nb_missile, &nb_enemy, &hit, effect_volume);
+        check_collision_enemy_missile_player(&player, &missiles_enemy, &nb_missile_enemy, &quit, &hit, effect_volume);
+        check_collision_bonus_player(&player, &bonus_list, &nb_bonus, &take, effect_volume);
+        check_keyboard_pressed(event, key_sym, state, &nb_missile, &player, &enemies, &nb_enemy, &missiles, &nuke_obj, rocket, laser, hit, effect_volume);
 
-        nuke_animation(&nuke_obj);
+        if (nuke_obj.anim_state < 750 && nuke_obj.anim_state > 0)
+        {
 
-        check_collision_nuke_enemy(&nuke_obj, &enemies, &nb_enemy, hit, effect_volume);
+          nuke_animation(&nuke_obj);
+
+          check_collision_nuke_enemy(&nuke_obj, &enemies, &nb_enemy, hit, effect_volume);
+        }
+        else
+        {
+          nuke_obj.anim_state = 750;
+        }
+        draw_health_bar(WIDTH - 200, HEIGHT - 100, 200, 20, &player, hud, shield, fireball, nuke, font_hud, filtre);
       }
-      else
-      {
-        nuke_obj.anim_state = 750;
-      }
-      draw_health_bar(WIDTH - 200, HEIGHT - 100, 200, 20, &player, hud, shield, fireball, nuke, font_hud, filtre);
     }
+    draw_player(&player);
+    if (frame_timer < 110)
+    {
+      frame_timer++;
+    }
+
     /* Get the time in nanoseconds at the frame ending */
     clock_gettime(CLOCK_REALTIME, &new);
 
