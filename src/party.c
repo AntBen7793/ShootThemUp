@@ -17,6 +17,74 @@
 #include "../include/menu.h"
 #include "../include/end.h"
 
+void start_animation(int frame_timer, MLV_Image *ship, MLV_Image *cloud, MLV_Image *pilote, MLV_Image *tmp, MLV_Font *font_note, Player *player, int x, int y, int y2, int *second)
+{
+  if (frame_timer % 35 == 1)
+        {
+          *second += 50;
+          if (*second >= 200)
+          {
+
+   
+            *second = 300;
+            player->sprite = tmp;
+          }
+        }
+        
+        MLV_draw_image(ship, WIDTH / 2 - 110, HEIGHT - 650+y*2);
+        MLV_draw_image(cloud, x, y2);
+        MLV_draw_image(cloud, x, y2 - HEIGHT);
+        MLV_draw_text_box_with_font(100, 200, WIDTH - 200, 150, "3   2   1   GO !", font_note, 1, MLV_COLOR_WHITE, MLV_COLOR_WHITE, MLV_COLOR_BLACK, MLV_TEXT_CENTER, MLV_TEXT_CENTER, MLV_TEXT_CENTER);
+
+        MLV_draw_filled_rectangle(250 + *second, 250, WIDTH - 500 - *second, 50, MLV_COLOR_BLACK);
+        MLV_draw_image(pilote, 100, 50);
+
+}
+void death_animation()
+{
+  int transition_state = 0;
+  int square_size = 10;
+  int x = 0;
+  int y = 0;
+  int width = WIDTH;
+  int height = HEIGHT;
+  while (transition_state < WIDTH && transition_state < HEIGHT)
+  {
+    /* Dessiner les carrés noirs en spirale */
+    for (int i = 0; i < width; i += square_size)
+    {
+      MLV_draw_filled_rectangle(x + i, y, square_size, square_size, MLV_COLOR_BLACK);
+    }
+    for (int i = square_size; i < height; i += square_size)
+    {
+      MLV_draw_filled_rectangle(x + width - square_size, y + i, square_size, square_size, MLV_COLOR_BLACK);
+    }
+    for (int i = width - square_size * 2; i >= 0; i -= square_size)
+    {
+      MLV_draw_filled_rectangle(x + i, y + height - square_size, square_size, square_size, MLV_COLOR_BLACK);
+    }
+    for (int i = height - square_size * 2; i >= square_size; i -= square_size)
+    {
+      MLV_draw_filled_rectangle(x, y + i, square_size, square_size, MLV_COLOR_BLACK);
+    }
+
+    /* Actualiser l'affichage */
+
+    MLV_actualise_window();
+
+    /* Temporisation pour contrôler la vitesse de la transition */
+    MLV_wait_milliseconds(20);
+
+    /* Mettre à jour les variables pour la prochaine itération */
+    x += square_size;
+    y += square_size;
+    width -= square_size * 2;
+    height -= square_size * 2;
+    transition_state += square_size * 2;
+  }
+
+  transition_state = 0;
+}
 void init_party(double *effect_volume, double *music_volume, int level, int *current)
 {
   printf("Le début de quelque chose de grand\n");
@@ -47,6 +115,8 @@ void init_party(double *effect_volume, double *music_volume, int level, int *cur
   MLV_Image *fireball = MLV_load_image("./img/fireball_icon.png");
   MLV_Image *nuke = MLV_load_image("./img/nuke_icon.png");
   MLV_Image *filtre = MLV_load_image("./img/filtre.png");
+  MLV_Image *pilote = MLV_load_image("./img/pilote.png");
+  MLV_Image *ship = MLV_load_image("./img/porte-avion.png");
   MLV_Font *font_hud = MLV_load_font("./font/ARCADECLASSIC.ttf", 40);
   MLV_Font *font_end = MLV_load_font("./font/ARCADECLASSIC.ttf", 70);
   MLV_Font *font_note = MLV_load_font("./font/ARCADECLASSIC.ttf", 60);
@@ -56,11 +126,14 @@ void init_party(double *effect_volume, double *music_volume, int level, int *cur
   MLV_resize_image(nuke, 50, 50);
   MLV_resize_image(filtre, 160, 60);
   MLV_resize_image(hud, 210, 100);
+  MLV_resize_image(pilote, 250, 150);
+  MLV_resize_image(ship, 217, 550);
 
   MLV_resize_image(cloud, WIDTH, HEIGHT);
   MLV_resize_image(background, WIDTH, HEIGHT);
   Player player = init_player();
-
+  MLV_Image *tmp = player.sprite;
+  player.sprite = player.sprite_forward;
   /* Music */
   // MLV_Sound* rocket =  MLV_load_sound("soud/rocket.mp3");
   MLV_Music *music = MLV_load_music("sound/DangerZone.mp3");
@@ -84,15 +157,16 @@ void init_party(double *effect_volume, double *music_volume, int level, int *cur
   Bonus *bonus_list = NULL;
   int win = 0;
   int frame_timer = 0;
+  int second = 0;
   Nuke nuke_obj = init_nuke(0, 100);
   // init_enemy(&enemies, &nb_enemy, 200, 10);
   init_level(&waves, &nb_wave, &current_wave, level);
 
-  MLV_Image **explosion_images = malloc(9 * sizeof(MLV_Image *));
-  for (int i = 0; i < 9; i++)
+  MLV_Image **explosion_images = malloc(8 * sizeof(MLV_Image *));
+  for (int i = 0; i < 7; i++)
   {
     char filename[50];
-    sprintf(filename, "./img/explosion1/plane_state%d.png", i);
+    sprintf(filename, "./img/boom/boom%d.png", i);
     explosion_images[i] = MLV_load_image(filename);
   }
 
@@ -150,59 +224,17 @@ void init_party(double *effect_volume, double *music_volume, int level, int *cur
       update_level(&waves, &nb_wave, &current_wave, &enemies, &nb_enemy, &bonus_list, &nb_bonus, &quit, &win);
     }
 
-    update_player(&player);
+    
     MLV_draw_image(background, x, y);
     MLV_draw_image(background, x, y - HEIGHT);
-    MLV_draw_image(cloud, x, y2);
-    MLV_draw_image(cloud, x, y2 - HEIGHT);
+
     if (quit)
     {
       if (win == 0)
       {
         MLV_stop_music();
         MLV_play_sound(crash, *effect_volume);
-        int transition_state = 0;
-        int square_size = 10;
-        int x = 0;
-        int y = 0;
-        int width = WIDTH;
-        int height = HEIGHT;
-        while (transition_state < WIDTH && transition_state < HEIGHT)
-        {
-          /* Dessiner les carrés noirs en spirale */
-          for (int i = 0; i < width; i += square_size)
-          {
-            MLV_draw_filled_rectangle(x + i, y, square_size, square_size, MLV_COLOR_BLACK);
-          }
-          for (int i = square_size; i < height; i += square_size)
-          {
-            MLV_draw_filled_rectangle(x + width - square_size, y + i, square_size, square_size, MLV_COLOR_BLACK);
-          }
-          for (int i = width - square_size * 2; i >= 0; i -= square_size)
-          {
-            MLV_draw_filled_rectangle(x + i, y + height - square_size, square_size, square_size, MLV_COLOR_BLACK);
-          }
-          for (int i = height - square_size * 2; i >= square_size; i -= square_size)
-          {
-            MLV_draw_filled_rectangle(x, y + i, square_size, square_size, MLV_COLOR_BLACK);
-          }
-
-          /* Actualiser l'affichage */
-
-          MLV_actualise_window();
-
-          /* Temporisation pour contrôler la vitesse de la transition */
-          MLV_wait_milliseconds(20);
-
-          /* Mettre à jour les variables pour la prochaine itération */
-          x += square_size;
-          y += square_size;
-          width -= square_size * 2;
-          height -= square_size * 2;
-          transition_state += square_size * 2;
-        }
-
-        transition_state = 0;
+        death_animation();
       }
 
       init_end(&win, font_end, font_hud, font_note, 300, &stats, &player, music_volume, effect_volume);
@@ -217,9 +249,11 @@ void init_party(double *effect_volume, double *music_volume, int level, int *cur
     else
     {
 
-      if (frame_timer >= 110)
+      if (frame_timer >= 130)
       {
-        
+        MLV_draw_image(cloud, x, y2);
+        MLV_draw_image(cloud, x, y2 - HEIGHT);
+        update_player(&player);
         update_bonus(&bonus_list, nb_bonus, heart_animation, shield_animation, fireball_animation);
         update_missile_enemy(&missiles_enemy, nb_missile_enemy);
         update_missile(&missiles, nb_missile);
@@ -243,9 +277,15 @@ void init_party(double *effect_volume, double *music_volume, int level, int *cur
         }
         draw_health_bar(WIDTH - 200, HEIGHT - 100, 200, 20, &player, hud, shield, fireball, nuke, font_hud, filtre);
       }
+      else
+      {
+        // draw black rec with white border
+        start_animation(frame_timer, ship, cloud, pilote, tmp, font_note, &player, x ,y, y2, &second);
+      
+      }
     }
     draw_player(&player);
-    if (frame_timer < 110)
+    if (frame_timer < 130)
     {
       frame_timer++;
     }

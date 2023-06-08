@@ -84,4 +84,5 @@ typedef struct {
     int cooldown;
     int explosion_state;
     MLV_Image * sprite;
+    MLV_Image * boom;
 } Enemy;

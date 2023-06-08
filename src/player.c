@@ -6,8 +6,8 @@
 Player init_player()
 {
     Player player;
-    player.x = 400;
-    player.y = 700;
+    player.x = (WIDTH / 2)-35;
+    player.y = 500;
     player.dx = 0;
     player.dy = 0;
     player.width = 70;

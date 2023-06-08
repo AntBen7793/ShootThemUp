@@ -30,20 +30,26 @@ void update_level(char*** waves, int* nb_wave, int* current_waves, Enemy** enemi
                 }else if ((*waves)[i][j] == 'B'){
                     init_bonus(bonus_list, nb_bonus, x+10, y+10, 2);
                      x += ENEMY_W;
+                }else if ((*waves)[i][j] == 'N'){
+                    init_bonus(bonus_list, nb_bonus, x+10, y+10, 3);
+                     x += ENEMY_W;
                 }else if ((*waves)[i][j] == 'V'){
                     init_enemy(enemies, nb_enemy, x ,y, 1);
                      x += ENEMY_W;
-                }else if ((*waves)[i][j] == 'I'){
+                }else if ((*waves)[i][j] == 'K'){
                     init_enemy(enemies, nb_enemy, x ,y, 2);
-                     x += ENEMY_W;
-                }else if ((*waves)[i][j] == 'N'){
-                    init_bonus(bonus_list, nb_bonus, x+10, y+10, 3);
                      x += ENEMY_W;
                 }else if ((*waves)[i][j] == 'L'){
                     init_enemy(enemies, nb_enemy, x ,y, 3);
                      x += ENEMY_W;
                 }else if ((*waves)[i][j] == 'R'){
                     init_enemy(enemies, nb_enemy, x ,y, 4);
+                     x += ENEMY_W;
+                }else if ((*waves)[i][j] == 'T'){
+                    init_enemy(enemies, nb_enemy, x ,y, 6);
+                     x += ENEMY_W;
+                }else if ((*waves)[i][j] == 'C'){
+                    init_enemy(enemies, nb_enemy, x ,y, 5);
                      x += ENEMY_W;
                 }else if ((*waves)[i][j] == 'F'){
                     *quit =1;
